@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anvesh Kumar Boda — IT Support Professional</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy: #0d1b2a;
+      --navy-mid: #1a2e45;
+      --navy-light: #253f5e;
+      --steel: #2a6496;
+      --accent: #00c2cb;
+      --accent2: #f0a500;
+      --text: #e8edf2;
+      --text-muted: #8fa3b8;
+      --card-bg: rgba(26, 46, 69, 0.6);
+      --border: rgba(0,194,203,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--navy);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 20%, rgba(0,194,203,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 75%, rgba(42,100,150,0.10) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,194,203,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,194,203,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 5%;
+      background: rgba(13,27,42,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--accent); letter-spacing: 0.05em; }
+    .nav-logo span { color: var(--text-muted); }
+    nav ul { list-style: none; display: flex; gap: 2.5rem; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; position: relative; }
+    nav a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.25s; }
+    nav a:hover { color: var(--accent); }
+    nav a:hover::after { width: 100%; }
+
+    section { position: relative; z-index: 1; padding: 7rem 5%; max-width: 1200px; margin: 0 auto; }
+
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 6rem;
+      max-width: 100%;
+      padding-left: 8%;
+      padding-right: 8%;
+    }
+
+    .hero-label { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s 0.2s forwards; }
+    .hero-label::before { content: '// '; opacity: 0.5; }
+
+    h1 { font-family: 'DM Serif Display', serif; font-size: clamp(3rem, 7vw, 6rem); line-height: 1.05; color: var(--text); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s 0.35s forwards; }
+    h1 em { font-style: normal; color: var(--accent); }
+
+    .hero-subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-muted); max-width: 640px; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s 0.5s forwards; }
+
+    .hero-cta { display: flex; gap: 1.2rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s 0.65s forwards; }
+
+    .btn { display: inline-block; padding: 0.9rem 2.2rem; border-radius: 3px; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.04em; text-decoration: none; transition: all 0.25s; cursor: pointer; border: none; }
+    .btn-primary { background: var(--accent); color: var(--navy); }
+    .btn-primary:hover { background: #00dde8; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,194,203,0.3); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    .hero-stats { display: flex; gap: 4rem; margin-top: 5rem; opacity: 0; animation: fadeUp 0.6s 0.8s forwards; }
+    .stat-num { font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem; }
+
+    .section-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.75rem; }
+    .section-tag::before { content: '// '; opacity: 0.5; }
+
+    h2 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 3.5rem; color: var(--text); }
+    h2 span { color: var(--accent); }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .about-text p { color: var(--text-muted); margin-bottom: 1.2rem; font-size: 1.05rem; }
+    .about-highlights { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .highlight-card { background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.4rem 1.6rem; border-radius: 0 4px 4px 0; backdrop-filter: blur(8px); transition: transform 0.25s, box-shadow 0.25s; }
+    .highlight-card:hover { transform: translateX(6px); box-shadow: 0 4px 20px rgba(0,194,203,0.1); }
+    .highlight-card h4 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
+    .highlight-card p { font-size: 0.875rem; color: var(--text-muted); margin: 0; }
+
+    .cert-band { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 3rem; }
+    .cert-badge { display: flex; align-items: center; gap: 0.75rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.4rem; backdrop-filter: blur(8px); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; text-decoration: none; cursor: pointer; }
+    .cert-badge:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,194,203,0.18); border-color: rgba(0,194,203,0.45); }
+    .cert-badge-icon { font-size: 1.6rem; }
+    .cert-badge-info .cert-name { font-size: 0.85rem; font-weight: 600; color: var(--text); display: block; }
+    .cert-badge-info .cert-issuer { font-size: 0.75rem; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+    .cert-verify { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); margin-left: auto; padding-left: 1rem; transition: color 0.2s; white-space: nowrap; }
+    .cert-badge:hover .cert-verify { color: var(--accent); }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .skill-category { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 2rem; backdrop-filter: blur(8px); transition: transform 0.25s, box-shadow 0.25s; }
+    .skill-category:hover { transform: translateY(-4px); box-shadow: 0 12px 35px rgba(0,194,203,0.08); }
+    .skill-category-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+    .skill-category h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1.2rem; color: var(--text); }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: 2px; background: rgba(0,194,203,0.08); border: 1px solid rgba(0,194,203,0.2); color: var(--accent); }
+
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--accent), transparent); }
+    .timeline-item { position: relative; margin-bottom: 3.5rem; padding-left: 2rem; }
+    .timeline-item::before { content: ''; position: absolute; left: -2.45rem; top: 0.4rem; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px rgba(0,194,203,0.5); }
+    .timeline-date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .timeline-role { font-size: 1.15rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+    .timeline-company { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+    .timeline-bullets { list-style: none; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.55rem; }
+    .timeline-bullets li { font-size: 0.9rem; color: var(--text-muted); padding-left: 1.2rem; position: relative; }
+    .timeline-bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 0.75rem; top: 0.15rem; }
+    .timeline-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .edu-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 2rem 2.5rem; backdrop-filter: blur(8px); display: flex; align-items: center; gap: 2rem; }
+    .edu-icon { font-size: 2.5rem; }
+    .edu-degree { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+    .edu-school { font-size: 0.95rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .edu-date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); margin-top: 0.4rem; }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.8rem; }
+    .project-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 2rem; backdrop-filter: blur(8px); transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; display: flex; flex-direction: column; }
+    .project-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,194,203,0.1); border-color: rgba(0,194,203,0.35); }
+    .project-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .project-icon { font-size: 2rem; }
+    .project-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text); }
+    .project-card p { font-size: 0.9rem; color: var(--text-muted); flex: 1; margin-bottom: 1.5rem; }
+    .project-impact { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--accent2); font-family: 'JetBrains Mono', monospace; background: rgba(240,165,0,0.07); border: 1px solid rgba(240,165,0,0.2); padding: 0.5rem 0.8rem; border-radius: 3px; margin-bottom: 1rem; }
+
+    #contact { text-align: center; }
+    #contact h2 { margin-bottom: 1rem; }
+    .contact-sub { color: var(--text-muted); max-width: 480px; margin: 0 auto 3rem; }
+    .contact-links { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+    .contact-link { display: flex; align-items: center; gap: 0.6rem; color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-family: 'JetBrains Mono', monospace; border: 1px solid var(--border); padding: 0.85rem 1.6rem; border-radius: 3px; transition: all 0.25s; backdrop-filter: blur(8px); background: var(--card-bg); }
+    .contact-link:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,194,203,0.12); }
+
+    .availability-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .avail-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 2rem; backdrop-filter: blur(8px); display: flex; flex-direction: column; gap: 0.75rem; transition: transform 0.25s, box-shadow 0.25s; }
+    .avail-card:hover { transform: translateY(-4px); box-shadow: 0 12px 35px rgba(0,194,203,0.08); }
+    .avail-highlight { border-color: rgba(0,194,203,0.35); background: rgba(0,194,203,0.05); }
+    .avail-icon { font-size: 2rem; }
+    .avail-type { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+    .avail-detail { font-size: 0.875rem; color: var(--text-muted); flex: 1; }
+    .avail-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 0.3rem 0.8rem; border-radius: 2px; background: rgba(0,194,203,0.1); border: 1px solid rgba(0,194,203,0.25); color: var(--accent); width: fit-content; }
+    .avail-badge-future { background: rgba(240,165,0,0.08); border-color: rgba(240,165,0,0.25); color: var(--accent2); }
+    .avail-note { display: flex; align-items: center; gap: 0.75rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.5rem; font-size: 0.875rem; color: var(--text-muted); backdrop-filter: blur(8px); }
+    .avail-note strong { color: var(--text); }
+
+    footer { text-align: center; padding: 2.5rem 5%; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; position: relative; z-index: 1; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-stats { gap: 2rem; flex-wrap: wrap; }
+      section { padding: 5rem 5%; }
+      .edu-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">AKB<span>.it</span></div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#availability">Availability</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-label">IT Support &amp; Systems Professional</p>
+  <h1>Anvesh<br/><em>Kumar Boda</em></h1>
+  <p class="hero-subtitle">IT Support professional with 2+ years at Tata Consultancy Services, specializing in enterprise print services, thin-client management, and cloud infrastructure — supporting nationwide US healthcare environments at scale.</p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View My Work</a>
+    <a href="#contact" class="btn btn-outline">Get In Touch</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">2+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div>
+      <div class="stat-num">1000s</div>
+      <div class="stat-label">Devices Managed</div>
+    </div>
+    <div>
+      <div class="stat-num">2</div>
+      <div class="stat-label">Cloud Certifications</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-tag reveal">Who I Am</p>
+  <h2 class="reveal">About <span>Me</span></h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I'm an IT Support professional based in Tarneit, Victoria, Australia, with hands-on experience supporting enterprise-scale healthcare IT environments across the US at Tata Consultancy Services.</p>
+      <p>My core expertise lies in enterprise print management (LRS), thin-client administration (UMS), device fleet operations, and SLA-driven incident response via ServiceNow — administering thousands of endpoints to ensure zero-downtime operations for DaVita Dialysis nationwide facilities.</p>
+      <p>I complement my operational background with scripting skills in PowerShell and Python for automated rollouts and fleet health checks, and hold active cloud certifications in both Google Cloud and Microsoft Azure. Fluent in English, Hindi, and Telugu.</p>
+    </div>
+    <div class="about-highlights reveal">
+      <div class="highlight-card">
+        <h4>🖨️ Enterprise Print Management</h4>
+        <p>Administered the LRS portal across thousands of devices — firmware, static IP assignment, and compliance for healthcare-critical print environments.</p>
+      </div>
+      <div class="highlight-card">
+        <h4>💻 Thin Client Operations</h4>
+        <p>Managed UMS platform for thin client enrollment, policy rollouts, lifecycle hygiene, and health reporting at scale.</p>
+      </div>
+      <div class="highlight-card">
+        <h4>⚙️ PowerShell &amp; Python Automation</h4>
+        <p>Scripted automated rollout validations and fleet health checks, reducing manual effort and improving deployment reliability.</p>
+      </div>
+      <div class="highlight-card">
+        <h4>☁️ Multi-Cloud Certified</h4>
+        <p>Holds active Google Cloud Associate Cloud Engineer and Microsoft Azure Network Engineer Associate certifications.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cert-band reveal">
+    <a class="cert-badge" href="https://www.credential.net/267a4bb9-0662-433c-b736-77ad2727cf3d?username=anveshkumarboda138158" target="_blank" rel="noopener" title="Verify Google Cloud Associate Cloud Engineer credential on Google Cloud Skills Boost">
+      <div class="cert-badge-icon">🟡</div>
+      <div class="cert-badge-info">
+        <span class="cert-name">Associate Cloud Engineer</span>
+        <span class="cert-issuer">Google Cloud · Aug 2023 – Aug 2026</span>
+      </div>
+      <span class="cert-verify">↗ Verify</span>
+    </a>
+    <a class="cert-badge" href="https://learn.microsoft.com/en-us/users/AnveshKumarBoda-7245/credentials/C2CB77A5EBEAD1E2?ref=https%3A%2F%2Fwww.linkedin.com%2F" target="_blank" rel="noopener" title="Verify Microsoft Azure Network Engineer Associate on Microsoft Learn">
+      <div class="cert-badge-icon">🔵</div>
+      <div class="cert-badge-info">
+        <span class="cert-name">Azure Network Engineer Associate</span>
+        <span class="cert-issuer">Microsoft · Mar 2024 – Mar 2027</span>
+      </div>
+      <span class="cert-verify">↗ Verify</span>
+    </a>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-tag reveal">Technical Expertise</p>
+  <h2 class="reveal">Core <span>Skills</span></h2>
+  <div class="skills-grid">
+    <div class="skill-category reveal">
+      <div class="skill-category-icon">🖨️</div>
+      <h3>Print &amp; Endpoint Management</h3>
+      <div class="skill-tags">
+        <span class="tag">LRS Print Management</span>
+        <span class="tag">Firmware Updates</span>
+        <span class="tag">Static IP Config</span>
+        <span class="tag">Device Compliance</span>
+        <span class="tag">Fleet Reporting</span>
+      </div>
+    </div>
+    <div class="skill-category reveal">
+      <div class="skill-category-icon">💻</div>
+      <h3>Thin Client Administration</h3>
+      <div class="skill-tags">
+        <span class="tag">UMS Platform</span>
+        <span class="tag">Device Enrollment</span>
+        <span class="tag">Policy Management</span>
+        <span class="tag">Lifecycle Hygiene</span>
+        <span class="tag">Artifactory</span>
+      </div>
+    </div>
+    <div class="skill-category reveal">
+      <div class="skill-category-icon">☁️</div>
+      <h3>Cloud Platforms</h3>
+      <div class="skill-tags">
+        <span class="tag">Google Cloud (GCP)</span>
+        <span class="tag">Microsoft Azure</span>
+        <span class="tag">AWS</span>
+        <span class="tag">Azure Networking</span>
+      </div>
+    </div>
+    <div class="skill-category reveal">
+      <div class="skill-category-icon">⚙️</div>
+      <h3>Scripting &amp; Automation</h3>
+      <div class="skill-tags">
+        <span class="tag">PowerShell</span>
+        <span class="tag">Python</span>
+        <span class="tag">C</span>
+        <span class="tag">Automated Rollouts</span>
+        <span class="tag">Health Check Scripts</span>
+      </div>
+    </div>
+    <div class="skill-category reveal">
+      <div class="skill-category-icon">🎫</div>
+      <h3>ITSM &amp; Incident Response</h3>
+      <div class="skill-tags">
+        <span class="tag">ServiceNow</span>
+        <span class="tag">Incident Management</span>
+        <span class="tag">SLA Compliance</span>
+        <span class="tag">Stakeholder Reporting</span>
+        <span class="tag">Production Deployments</span>
+      </div>
+    </div>
+    <div class="skill-category reveal">
+      <div class="skill-category-icon">🖥️</div>
+      <h3>Systems &amp; Databases</h3>
+      <div class="skill-tags">
+        <span class="tag">Windows</span>
+        <span class="tag">Linux</span>
+        <span class="tag">MySQL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-tag reveal">Career History</p>
+  <h2 class="reveal">Work <span>Experience</span></h2>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-date">Sep 2022 — Oct 2024</div>
+      <div class="timeline-role">Assistant System Engineer</div>
+      <div class="timeline-company">Tata Consultancy Services · Hyderabad, India</div>
+      <ul class="timeline-bullets">
+        <li>Supported print services and thin client operations for US-based healthcare client DaVita Dialysis, ensuring high availability across nationwide facilities.</li>
+        <li>Administered the LRS print management portal: onboarded new printers, applied firmware updates, and maintained device compliance to prevent outages.</li>
+        <li>Configured printers to site requirements; assigned dedicated static IP addresses and validated connectivity for dialysis centres.</li>
+        <li>Monitored and triaged ServiceNow tickets, meeting SLA targets through timely incident resolution and clear stakeholder communication.</li>
+        <li>Prepared weekly and monthly print management reports for leadership, tracking fleet health, incidents, and remediation actions.</li>
+        <li>Managed thin clients via the UMS platform, including enrollment, policy updates, and lifecycle hygiene.</li>
+        <li>Executed weekly deployments using packages from the development team (via Artifactory) and validated rollouts at scale with automated PowerShell scripts.</li>
+        <li>Generated thin client health reports to retire stale endpoints and onboard replacements, keeping an accurate inventory for thousands of devices.</li>
+      </ul>
+      <div class="timeline-tags">
+        <span class="tag">LRS</span>
+        <span class="tag">UMS</span>
+        <span class="tag">PowerShell</span>
+        <span class="tag">ServiceNow</span>
+        <span class="tag">Artifactory</span>
+        <span class="tag">Python</span>
+        <span class="tag">Healthcare IT</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 3rem;">
+    <p class="section-tag reveal">Education</p>
+    <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+      <div class="edu-card reveal">
+        <div class="edu-icon">🎓</div>
+        <div>
+          <div class="edu-degree">Master of Information Technology and Systems</div>
+          <div class="edu-school">Victorian Institute of Technology, Melbourne</div>
+          <div class="edu-date">In Progress · Expected Oct 2026</div>
+        </div>
+        <span style="margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:0.7rem; background:rgba(240,165,0,0.1); border:1px solid rgba(240,165,0,0.3); color:var(--accent2); padding:0.3rem 0.75rem; border-radius:2px; white-space:nowrap;">In Progress</span>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-icon">🎓</div>
+        <div>
+          <div class="edu-degree">Bachelor of Technology</div>
+          <div class="edu-school">Institute of Aeronautical Engineering, Hyderabad</div>
+          <div class="edu-date">Jul 2018 — Aug 2022</div>
+        </div>
+        <span style="margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:0.7rem; background:rgba(0,194,203,0.08); border:1px solid rgba(0,194,203,0.2); color:var(--accent); padding:0.3rem 0.75rem; border-radius:2px; white-space:nowrap;">Completed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-tag reveal">What I've Delivered</p>
+  <h2 class="reveal">Key <span>Projects</span></h2>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-header">
+        <div class="project-icon">🖨️</div>
+      </div>
+      <h3>LRS Print Fleet Standardization</h3>
+      <p>Standardized configurations and static IP assignments across thousands of printers in DaVita Dialysis centres nationwide. Applied firmware updates and maintained device compliance to prevent service disruptions in critical healthcare facilities.</p>
+      <div class="project-impact">⚡ High availability maintained across all US sites</div>
+      <div class="skill-tags">
+        <span class="tag">LRS Portal</span>
+        <span class="tag">Static IP</span>
+        <span class="tag">Firmware Management</span>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-header">
+        <div class="project-icon">⚙️</div>
+      </div>
+      <h3>PowerShell Deployment Automation</h3>
+      <p>Developed automated PowerShell scripts to validate weekly thin client deployments at scale, replacing manual verification. Scripts flagged rollout failures and generated actionable health reports, improving deployment reliability and saving significant time each cycle.</p>
+      <div class="project-impact">⚡ Eliminated manual validation bottlenecks</div>
+      <div class="skill-tags">
+        <span class="tag">PowerShell</span>
+        <span class="tag">Artifactory</span>
+        <span class="tag">UMS</span>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-header">
+        <div class="project-icon">💻</div>
+      </div>
+      <h3>Thin Client Lifecycle Management</h3>
+      <p>Managed the full lifecycle of thousands of thin clients via UMS — from enrollment and policy deployment to health monitoring and stale device retirement. Maintained accurate inventory enabling proactive hardware refresh planning.</p>
+      <div class="project-impact">⚡ Accurate fleet inventory for 1000s of endpoints</div>
+      <div class="skill-tags">
+        <span class="tag">UMS Platform</span>
+        <span class="tag">Device Enrollment</span>
+        <span class="tag">Fleet Reporting</span>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-header">
+        <div class="project-icon">📊</div>
+      </div>
+      <h3>SLA Reporting &amp; Fleet Health Dashboards</h3>
+      <p>Designed and delivered weekly and monthly fleet health reports for senior leadership, tracking incident trends, remediation status, and SLA compliance across the entire print and thin client estate for a critical US healthcare client.</p>
+      <div class="project-impact">⚡ Consistent SLA compliance across all reporting periods</div>
+      <div class="skill-tags">
+        <span class="tag">ServiceNow</span>
+        <span class="tag">Reporting</span>
+        <span class="tag">SLA Management</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AVAILABILITY -->
+<section id="availability">
+  <p class="section-tag reveal">Open To Work</p>
+  <h2 class="reveal">Current <span>Availability</span></h2>
+  <div class="availability-grid reveal">
+    <div class="avail-card">
+      <div class="avail-icon">🕐</div>
+      <div class="avail-type">Internship Roles</div>
+      <div class="avail-detail">Open to full-time internships in IT support, systems administration, cloud, or networking — available to start immediately.</div>
+      <div class="avail-badge">Available Now</div>
+    </div>
+    <div class="avail-card">
+      <div class="avail-icon">📅</div>
+      <div class="avail-type">Part-Time Roles</div>
+      <div class="avail-detail">Available for part-time positions until July 2025, balancing work alongside my Master of IT and Systems studies at VIT Melbourne.</div>
+      <div class="avail-badge">Until July 2025</div>
+    </div>
+    <div class="avail-card avail-highlight">
+      <div class="avail-icon">🚀</div>
+      <div class="avail-type">Full-Time from Oct 2026</div>
+      <div class="avail-detail">Graduating October 2026 — open to full-time opportunities in IT systems, cloud infrastructure, or support engineering after completion.</div>
+      <div class="avail-badge avail-badge-future">From Oct 2026</div>
+    </div>
+  </div>
+  <div class="avail-note reveal">
+    <span>📍</span>
+    <span>Based in <strong>Tarneit, Victoria</strong> — open to roles across Melbourne and remote-friendly positions Australia-wide.</span>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-tag reveal">Let's Connect</p>
+  <h2 class="reveal">Get In <span>Touch</span></h2>
+  <p class="contact-sub reveal">Open to new IT opportunities in Australia. Whether you have a role in mind or just want to connect — feel free to reach out.</p>
+  <div class="contact-links reveal">
+    <a href="mailto:anveshkumarboda@gmail.com" class="contact-link">📧 anveshkumarboda@gmail.com</a>
+    <a href="tel:+610416885767" class="contact-link">📱 0416 885 767</a>
+    <a href="https://www.linkedin.com/in/anvesh-kumar-boda-402519232/" target="_blank" class="contact-link">🔗 LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  <p>// Anvesh Kumar Boda · IT Support Professional · Tarneit, Victoria, Australia</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
