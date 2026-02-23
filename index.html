@@ -1,1230 +1,837 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Anvesh Kumar Boda — IT Professional</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --bg: #020408;
-      --bg2: #060d14;
-      --panel: rgba(0,255,180,0.04);
-      --border: rgba(0,255,180,0.2);
-      --border-bright: rgba(0,255,180,0.6);
-      --green: #00ffb4;
-      --green-dim: #00a876;
-      --gold: #ffd700;
-      --gold-dim: #b8960a;
-      --red: #ff4466;
-      --blue: #00aaff;
-      --text: #c8ffe8;
-      --text-dim: #5a9980;
-      --text-dark: #2a5040;
-      --scan: rgba(0,255,180,0.015);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Exo 2', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-      cursor: crosshair;
-    }
-
-    /* SCANLINES */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        var(--scan) 2px,
-        var(--scan) 4px
-      );
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* GRID BG */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,255,180,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,255,180,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* GLOW ORBS */
-    .glow-orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(120px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .glow-orb-1 { width: 500px; height: 500px; background: rgba(0,255,180,0.05); top: -100px; left: -100px; }
-    .glow-orb-2 { width: 400px; height: 400px; background: rgba(255,215,0,0.04); bottom: 100px; right: -50px; }
-
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 4%;
-      background: rgba(2,4,8,0.92);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.7rem;
-      color: var(--green);
-      text-shadow: 0 0 15px var(--green);
-      letter-spacing: 0.1em;
-    }
-
-    nav ul { list-style: none; display: flex; gap: 2rem; }
-    nav a {
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--text-dim);
-      text-decoration: none;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      transition: all 0.2s;
-      padding: 0.3rem 0.6rem;
-      border: 1px solid transparent;
-    }
-    nav a:hover {
-      color: var(--green);
-      border-color: var(--border);
-      text-shadow: 0 0 8px var(--green);
-      background: var(--panel);
-    }
-
-    /* SECTIONS */
-    section {
-      position: relative;
-      z-index: 1;
-      padding: 6rem 5%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* ═══════════════ HERO ═══════════════ */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      max-width: 100%;
-      padding: 0 6%;
-      padding-top: 5rem;
-    }
-
-    .hero-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-      width: 100%;
-    }
-
-    .hero-left {}
-
-    .hero-tag {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--green);
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.1s forwards;
-    }
-    .hero-tag::before { content: '> '; }
-
-    .hero-name {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 0.5rem;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.25s forwards;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .hero-name .green { color: var(--green); text-shadow: 0 0 20px var(--green), 0 0 40px rgba(0,255,180,0.3); }
-
-    .hero-class {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.9rem;
-      color: var(--gold);
-      letter-spacing: 0.2em;
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.4s forwards;
-    }
-    .hero-class::before { content: '[ '; }
-    .hero-class::after { content: ' ]'; }
-
-    .hero-bio {
-      font-size: 0.95rem;
-      color: var(--text-dim);
-      line-height: 1.8;
-      margin-bottom: 2.5rem;
-      max-width: 500px;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.55s forwards;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.7s forwards;
-    }
-
-    .btn-game {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.85rem 2rem;
-      text-decoration: none;
-      border: 1px solid var(--green);
-      color: var(--bg);
-      background: var(--green);
-      transition: all 0.2s;
-      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-    }
-    .btn-game:hover { background: transparent; color: var(--green); text-shadow: 0 0 8px var(--green); box-shadow: 0 0 20px rgba(0,255,180,0.3); }
-
-    .btn-game-outline {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.85rem 2rem;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      background: transparent;
-      transition: all 0.2s;
-      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-    }
-    .btn-game-outline:hover { border-color: var(--gold); color: var(--gold); text-shadow: 0 0 8px var(--gold); }
-
-    /* CHARACTER CARD */
-    .char-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 2rem;
-      position: relative;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.3s forwards;
-    }
-
-    .char-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(0,255,180,0.05) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    .char-card-corner {
-      position: absolute;
-      width: 12px; height: 12px;
-      border-color: var(--green);
-      border-style: solid;
-    }
-    .char-card-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-    .char-card-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
-    .char-card-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
-    .char-card-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-
-    .char-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .char-avatar {
-      width: 60px; height: 60px;
-      background: linear-gradient(135deg, var(--green-dim), var(--green));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 1.2rem;
-      color: var(--bg);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    }
-
-    .char-header-info {}
-    .char-name-sm { font-family: 'Orbitron', monospace; font-size: 0.85rem; font-weight: 700; color: var(--green); }
-    .char-level { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--gold); margin-top: 0.2rem; }
-
-    .char-stats { display: flex; flex-direction: column; gap: 0.9rem; }
-
-    .stat-row { display: flex; flex-direction: column; gap: 0.3rem; }
-    .stat-label-row { display: flex; justify-content: space-between; align-items: center; }
-    .stat-name { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; }
-    .stat-val { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--green); }
-
-    .xp-bar {
-      height: 6px;
-      background: rgba(0,255,180,0.1);
-      border: 1px solid rgba(0,255,180,0.15);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .xp-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green-dim), var(--green));
-      box-shadow: 0 0 8px var(--green);
-      transform: scaleX(0);
-      transform-origin: left;
-      animation: fillBar 1.5s 0.8s cubic-bezier(0.25,1,0.5,1) forwards;
-    }
-
-    @keyframes fillBar { to { transform: scaleX(1); } }
-
-    .char-badges {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .badge-chip {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      padding: 0.25rem 0.6rem;
-      background: rgba(255,215,0,0.08);
-      border: 1px solid rgba(255,215,0,0.3);
-      color: var(--gold);
-      letter-spacing: 0.1em;
-    }
-
-    /* SECTION HEADERS */
-    .section-header {
-      margin-bottom: 3rem;
-    }
-
-    .section-prefix {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--green);
-      letter-spacing: 0.2em;
-      margin-bottom: 0.5rem;
-    }
-    .section-prefix::before { content: '// '; color: var(--text-dark); }
-
-    h2 {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text);
-    }
-    h2 .accent { color: var(--green); text-shadow: 0 0 15px rgba(0,255,180,0.4); }
-
-    .section-line {
-      width: 80px; height: 2px;
-      background: linear-gradient(90deg, var(--green), transparent);
-      margin-top: 0.75rem;
-    }
-
-    /* ═══════════════ SKILLS TREE ═══════════════ */
-    .skills-tree {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.2rem;
-    }
-
-    .skill-node {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 1.5rem;
-      position: relative;
-      transition: all 0.25s;
-      overflow: hidden;
-    }
-
-    .skill-node::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: var(--green);
-      box-shadow: 0 0 10px var(--green);
-    }
-
-    .skill-node:hover {
-      border-color: var(--border-bright);
-      background: rgba(0,255,180,0.07);
-      transform: translateX(4px);
-    }
-
-    .skill-node-icon {
-      font-size: 1.4rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .skill-node-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--green);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
-
-    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-
-    .stag {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      padding: 0.2rem 0.6rem;
-      border: 1px solid rgba(0,255,180,0.2);
-      color: var(--text-dim);
-      background: rgba(0,255,180,0.04);
-      letter-spacing: 0.05em;
-      transition: all 0.2s;
-    }
-
-    .skill-node:hover .stag { border-color: rgba(0,255,180,0.4); color: var(--text); }
-
-    /* ═══════════════ QUEST LOG (EXPERIENCE) ═══════════════ */
-    .quest-log { display: flex; flex-direction: column; gap: 0; }
-
-    .quest-item {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 2rem;
-      padding: 2rem 0;
-      border-bottom: 1px solid rgba(0,255,180,0.08);
-      position: relative;
-    }
-
-    .quest-item::before {
-      content: '';
-      position: absolute;
-      left: 158px; top: 0; bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, var(--border), transparent);
-    }
-
-    .quest-time {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--green);
-      letter-spacing: 0.1em;
-      padding-top: 0.3rem;
-      line-height: 1.6;
-    }
-
-    .quest-dot {
-      position: absolute;
-      left: 152px; top: 2.3rem;
-      width: 12px; height: 12px;
-      background: var(--green);
-      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-      box-shadow: 0 0 10px var(--green);
-    }
-
-    .quest-content {}
-
-    .quest-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.2rem;
-      letter-spacing: 0.05em;
-    }
-
-    .quest-org {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--gold);
-      margin-bottom: 1rem;
-      letter-spacing: 0.1em;
-    }
-
-    .quest-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-    .quest-bullets li {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      padding-left: 1.2rem;
-      position: relative;
-      line-height: 1.6;
-    }
-    .quest-bullets li::before {
-      content: '▶';
-      position: absolute;
-      left: 0;
-      color: var(--green);
-      font-size: 0.5rem;
-      top: 0.35rem;
-    }
-
-    .quest-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .qtag {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      padding: 0.2rem 0.6rem;
-      border: 1px solid rgba(0,170,255,0.3);
-      color: var(--blue);
-      background: rgba(0,170,255,0.05);
-      letter-spacing: 0.08em;
-    }
-
-    /* ═══════════════ ACHIEVEMENTS (PROJECTS) ═══════════════ */
-    .achievements-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.2rem;
-    }
-
-    .achievement-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 1.8rem;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.25s;
-    }
-
-    .achievement-card::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 60px; height: 60px;
-      background: linear-gradient(225deg, rgba(0,255,180,0.08), transparent);
-    }
-
-    .achievement-card:hover {
-      border-color: var(--border-bright);
-      box-shadow: 0 0 30px rgba(0,255,180,0.08), inset 0 0 30px rgba(0,255,180,0.03);
-      transform: translateY(-4px);
-    }
-
-    .ach-icon { font-size: 1.8rem; margin-bottom: 1rem; }
-
-    .ach-rarity {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-    .rarity-epic { color: #b44fff; }
-    .rarity-rare { color: var(--blue); }
-    .rarity-uncommon { color: var(--green); }
-
-    .ach-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.75rem;
-      letter-spacing: 0.05em;
-    }
-
-    .ach-desc {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      line-height: 1.7;
-      margin-bottom: 1.2rem;
-    }
-
-    .ach-reward {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--gold);
-      background: rgba(255,215,0,0.06);
-      border: 1px solid rgba(255,215,0,0.2);
-      padding: 0.5rem 0.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .ach-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .atag {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      padding: 0.2rem 0.5rem;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-    }
-
-    /* ═══════════════ EDUCATION ═══════════════ */
-    .edu-cards { display: flex; flex-direction: column; gap: 1rem; }
-
-    .edu-panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 1.5rem 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      position: relative;
-      transition: all 0.2s;
-    }
-
-    .edu-panel:hover { border-color: var(--border-bright); }
-
-    .edu-rank {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 1.2rem;
-      color: var(--green);
-      text-shadow: 0 0 10px var(--green);
-      min-width: 40px;
-      text-align: center;
-    }
-
-    .edu-info { flex: 1; }
-    .edu-degree {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: 0.05em;
-      margin-bottom: 0.25rem;
-    }
-    .edu-school {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      margin-bottom: 0.2rem;
-    }
-    .edu-date {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--green);
-    }
-
-    .edu-status {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem;
-      padding: 0.3rem 0.75rem;
-      letter-spacing: 0.1em;
-      white-space: nowrap;
-    }
-    .status-active { border: 1px solid rgba(255,215,0,0.4); color: var(--gold); background: rgba(255,215,0,0.07); animation: pulse-gold 2s infinite; }
-    .status-done { border: 1px solid rgba(0,255,180,0.3); color: var(--green); background: rgba(0,255,180,0.06); }
-
-    @keyframes pulse-gold { 0%,100% { box-shadow: 0 0 0 rgba(255,215,0,0); } 50% { box-shadow: 0 0 12px rgba(255,215,0,0.3); } }
-
-    /* ═══════════════ CERTIFICATIONS ═══════════════ */
-    .certs-row { display: flex; gap: 1.2rem; flex-wrap: wrap; }
-
-    .cert-card {
-      flex: 1;
-      min-width: 260px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 1.5rem;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.25s;
-    }
-
-    .cert-card::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--green), transparent);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s;
-    }
-
-    .cert-card:hover { border-color: var(--border-bright); transform: translateY(-3px); }
-    .cert-card:hover::before { transform: scaleX(1); }
-
-    .cert-emblem { font-size: 2rem; }
-    .cert-info {}
-    .cert-name { font-family: 'Orbitron', monospace; font-size: 0.72rem; font-weight: 600; color: var(--text); display: block; margin-bottom: 0.2rem; }
-    .cert-issuer { font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; color: var(--green); display: block; margin-bottom: 0.2rem; }
-    .cert-expiry { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--text-dim); }
-    .cert-verify { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--text-dark); transition: color 0.2s; }
-    .cert-card:hover .cert-verify { color: var(--green); }
-
-    /* ═══════════════ AVAILABILITY ═══════════════ */
-    .avail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
-
-    .avail-panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 1.8rem;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.25s;
-    }
-    .avail-panel.active-panel { border-color: rgba(0,255,180,0.4); }
-    .avail-panel.active-panel::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--green), transparent);
-    }
-    .avail-panel:hover { border-color: var(--border-bright); transform: translateY(-3px); }
-
-    .avail-panel-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .avail-panel-type {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: 0.08em;
-      margin-bottom: 0.75rem;
-    }
-    .avail-panel-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1.2rem; }
-    .avail-status-tag {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.62rem;
-      padding: 0.3rem 0.8rem;
-      letter-spacing: 0.15em;
-      display: inline-block;
-    }
-    .status-green { border: 1px solid rgba(0,255,180,0.4); color: var(--green); background: rgba(0,255,180,0.07); }
-    .status-gold-tag { border: 1px solid rgba(255,215,0,0.4); color: var(--gold); background: rgba(255,215,0,0.06); }
-    .status-blue { border: 1px solid rgba(0,170,255,0.4); color: var(--blue); background: rgba(0,170,255,0.06); }
-
-    .avail-location {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 1rem 1.5rem;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
-    .avail-location strong { color: var(--text); }
-
-    /* ═══════════════ CONTACT ═══════════════ */
-    #contact { text-align: center; }
-    .contact-title { text-align: center; }
-
-    .contact-sub {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      max-width: 480px;
-      margin: 0 auto 3rem;
-      line-height: 1.8;
-    }
-
-    .contact-grid { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-
-    .contact-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      text-decoration: none;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      border: 1px solid var(--border);
-      padding: 0.9rem 1.6rem;
-      background: var(--panel);
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .contact-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(0,255,180,0.05), transparent);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .contact-btn:hover { border-color: var(--green); color: var(--green); text-shadow: 0 0 8px var(--green); }
-    .contact-btn:hover::before { opacity: 1; }
-
-    /* FOOTER */
-    footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 2rem 5%;
-      border-top: 1px solid var(--border);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--text-dark);
-      letter-spacing: 0.1em;
-    }
-
-    /* REVEAL */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s, transform 0.6s; }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* ANIMATIONS */
-    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .char-card { display: none; }
-      nav ul { gap: 1rem; }
-      nav a { font-size: 0.65rem; }
-      .quest-item { grid-template-columns: 1fr; }
-      .quest-item::before { display: none; }
-      .quest-dot { display: none; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anvesh Kumar Boda — IT Professional</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #010306;
+  --panel: rgba(0,220,150,0.04);
+  --border: rgba(0,220,150,0.18);
+  --border-hi: rgba(0,220,150,0.55);
+  --green: #00ffb4;
+  --green2: #00cc8f;
+  --gold: #ffd700;
+  --gold2: #c9a800;
+  --blue: #00b8ff;
+  --red: #ff3355;
+  --purple: #bf5fff;
+  --text: #d0ffe8;
+  --dim: #4a8a70;
+  --dark: #0a1a12;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:crosshair;}
+
+/* ── SCANLINES ── */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,180,0.012) 3px,rgba(0,255,180,0.012) 4px);pointer-events:none;z-index:9999;}
+
+/* ── GRID ── */
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,220,150,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,220,150,0.035) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+
+/* ── FLOATING PARTICLES ── */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:2px;height:2px;background:var(--green);border-radius:50%;animation:float linear infinite;opacity:0;}
+@keyframes float{0%{transform:translateY(100vh) translateX(0);opacity:0;}10%{opacity:0.6;}90%{opacity:0.3;}100%{transform:translateY(-10px) translateX(40px);opacity:0;}}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 4%;background:rgba(1,3,6,0.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Press Start 2P',monospace;font-size:0.62rem;color:var(--green);text-shadow:0 0 12px var(--green);letter-spacing:0.08em;}
+nav ul{list-style:none;display:flex;gap:0.3rem;}
+nav a{font-family:'Share Tech Mono',monospace;color:var(--dim);text-decoration:none;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;transition:all 0.2s;padding:0.4rem 0.75rem;border:1px solid transparent;border-radius:1px;}
+nav a:hover{color:var(--green);border-color:var(--border);text-shadow:0 0 6px var(--green);background:var(--panel);}
+
+/* ── LEVEL BADGE (floating) ── */
+.level-hud{position:fixed;right:2%;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:0.5rem;}
+.lhud-item{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:rgba(1,3,6,0.8);font-family:'Press Start 2P',monospace;font-size:0.45rem;color:var(--dim);cursor:pointer;transition:all 0.2s;position:relative;}
+.lhud-item.active{border-color:var(--green);color:var(--green);text-shadow:0 0 8px var(--green);background:rgba(0,255,180,0.08);}
+.lhud-item:hover{border-color:var(--green);color:var(--green);}
+.lhud-item::before{content:attr(data-label);position:absolute;right:44px;white-space:nowrap;font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--green);background:rgba(1,3,6,0.95);border:1px solid var(--border);padding:0.2rem 0.5rem;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.lhud-item:hover::before{opacity:1;}
+
+/* ── SECTION BASE ── */
+.game-section{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:7rem 6% 5rem;}
+
+/* ── LEVEL HEADER ── */
+.level-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;}
+.level-badge{font-family:'Press Start 2P',monospace;font-size:0.55rem;color:var(--bg);background:var(--green);padding:0.5rem 0.8rem;letter-spacing:0.08em;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);white-space:nowrap;text-shadow:none;}
+.level-badge.gold{background:var(--gold);color:#000;}
+.level-badge.blue{background:var(--blue);color:#000;}
+.level-badge.purple{background:var(--purple);color:#fff;}
+.level-badge.red{background:var(--red);color:#fff;}
+.level-title{font-family:'Orbitron',monospace;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;letter-spacing:0.08em;text-transform:uppercase;}
+.level-title .hl{color:var(--green);text-shadow:0 0 20px rgba(0,255,180,0.4);}
+.level-title .hl-gold{color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,0.4);}
+.level-line{flex:1;height:1px;background:linear-gradient(90deg,var(--green),transparent);}
+
+/* ── SECTION DIVIDER ── */
+.sec-divider{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;padding:2.5rem 5%;border-top:1px solid var(--border);}
+.unlock-btn{display:flex;align-items:center;gap:1.2rem;background:var(--panel);border:1px solid var(--border);padding:1.1rem 2.2rem;cursor:pointer;text-decoration:none;transition:all 0.25s;position:relative;overflow:hidden;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);}
+.unlock-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,255,180,0.07),transparent);opacity:0;transition:opacity 0.25s;}
+.unlock-btn:hover{border-color:var(--border-hi);box-shadow:0 0 25px rgba(0,255,180,0.12);}
+.unlock-btn:hover::before{opacity:1;}
+.unlock-btn:hover .unlock-arrow{transform:translateX(5px);}
+.unlock-btn:active{transform:scale(0.97);}
+.unlock-lv{font-family:'Press Start 2P',monospace;font-size:0.5rem;color:var(--bg);padding:0.35rem 0.65rem;letter-spacing:0.06em;white-space:nowrap;}
+.unlock-info{display:flex;flex-direction:column;gap:0.2rem;}
+.unlock-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);letter-spacing:0.2em;text-transform:uppercase;}
+.unlock-title{font-family:'Orbitron',monospace;font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.unlock-preview{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);letter-spacing:0.1em;}
+.unlock-arrow{font-family:'Share Tech Mono',monospace;font-size:1rem;transition:transform 0.2s;margin-left:0.5rem;}
+.unlock-line{flex:1;height:1px;max-width:100px;background:linear-gradient(90deg,transparent,var(--border));}
+
+/* ── LOCKED / UNLOCKED LEVELS ── */
+.level-locked{display:none;opacity:0;}
+.level-locked.unlocked{display:flex;animation:levelReveal 0.7s cubic-bezier(0.22,1,0.36,1) forwards;}
+.divider-locked{display:none;}
+.divider-locked.visible{display:flex;}
+@keyframes levelReveal{
+  0%{opacity:0;transform:translateY(40px) scale(0.98);filter:brightness(2);}
+  30%{filter:brightness(1.3);}
+  100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1);}
+}
+/* locked HUD items */
+.lhud-item.locked{opacity:0.25;cursor:not-allowed;pointer-events:none;}
+.lhud-item.locked::after{content:'🔒';position:absolute;font-size:0.4rem;bottom:3px;right:3px;}
+/* unlock flash overlay */
+.unlock-flash{position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:0;}
+.unlock-flash.go{animation:uflash 0.6s forwards;}
+@keyframes uflash{0%{background:rgba(0,255,180,0.18);opacity:1;}100%{background:transparent;opacity:0;}}
+/* scan wipe effect on unlock */
+@keyframes scanWipe{0%{clip-path:inset(0 100% 0 0);}100%{clip-path:inset(0 0% 0 0);}}
+
+/* ── HERO / LEVEL 1 ── */
+.hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:4rem;align-items:center;}
+.hero-tag{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--green);letter-spacing:0.22em;text-transform:uppercase;margin-bottom:1.2rem;opacity:0;animation:fadeUp 0.5s 0.1s forwards;}
+.hero-tag::before{content:'> ';}
+.hero-name{font-family:'Orbitron',monospace;font-size:clamp(2.2rem,5vw,4rem);font-weight:900;line-height:1.05;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.5rem;opacity:0;animation:fadeUp 0.5s 0.25s forwards;}
+.hero-name .g{color:var(--green);text-shadow:0 0 25px var(--green),0 0 50px rgba(0,255,180,0.2);}
+.hero-class{font-family:'Share Tech Mono',monospace;font-size:0.85rem;color:var(--gold);letter-spacing:0.18em;margin-bottom:1.8rem;opacity:0;animation:fadeUp 0.5s 0.4s forwards;}
+.hero-class::before{content:'[ ';}
+.hero-class::after{content:' ]';}
+.hero-bio{font-size:0.9rem;color:var(--dim);line-height:1.9;margin-bottom:2.5rem;max-width:520px;opacity:0;animation:fadeUp 0.5s 0.55s forwards;}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.5s 0.7s forwards;}
+.btn-g{font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.85rem 2rem;text-decoration:none;border:1px solid var(--green);color:var(--bg);background:var(--green);transition:all 0.2s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
+.btn-g:hover{background:transparent;color:var(--green);text-shadow:0 0 10px var(--green);box-shadow:0 0 20px rgba(0,255,180,0.2);}
+.btn-go{font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.85rem 2rem;text-decoration:none;border:1px solid var(--border);color:var(--dim);background:transparent;transition:all 0.2s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
+.btn-go:hover{border-color:var(--gold);color:var(--gold);}
+
+/* CHARACTER CARD */
+.char-card{background:var(--panel);border:1px solid var(--border);padding:2rem;position:relative;opacity:0;animation:fadeUp 0.5s 0.3s forwards;}
+.char-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,180,0.05),transparent 60%);pointer-events:none;}
+.cc{position:absolute;width:14px;height:14px;border-color:var(--green);border-style:solid;}
+.cc.tl{top:-1px;left:-1px;border-width:2px 0 0 2px;}
+.cc.tr{top:-1px;right:-1px;border-width:2px 2px 0 0;}
+.cc.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;}
+.cc.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+.char-top{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border);}
+.char-avatar{width:58px;height:58px;background:linear-gradient(135deg,var(--green2),var(--green));display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',monospace;font-size:1rem;color:var(--bg);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);}
+.char-name{font-family:'Orbitron',monospace;font-size:0.8rem;font-weight:700;color:var(--green);}
+.char-lvl{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--gold);margin-top:0.2rem;}
+.char-loc{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);margin-top:0.15rem;}
+.stat-row{margin-bottom:0.85rem;}
+.stat-top{display:flex;justify-content:space-between;margin-bottom:0.3rem;}
+.stat-n{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);letter-spacing:0.08em;}
+.stat-v{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--green);}
+.xbar{height:5px;background:rgba(0,255,180,0.08);border:1px solid rgba(0,255,180,0.12);}
+.xfill{height:100%;background:linear-gradient(90deg,var(--green2),var(--green));box-shadow:0 0 6px var(--green);transform:scaleX(0);transform-origin:left;animation:fillX 1.5s cubic-bezier(0.25,1,0.5,1) forwards;}
+@keyframes fillX{to{transform:scaleX(1);}}
+.chip-row{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);}
+.chip{font-family:'Share Tech Mono',monospace;font-size:0.55rem;padding:0.2rem 0.55rem;background:rgba(255,215,0,0.07);border:1px solid rgba(255,215,0,0.25);color:var(--gold);letter-spacing:0.08em;}
+
+/* ── SKILLS / LEVEL 2 ── */
+.skill-tree{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;}
+.skill-node{background:var(--panel);border:1px solid var(--border);padding:1.5rem;position:relative;overflow:hidden;transition:all 0.25s;}
+.skill-node::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--green);box-shadow:0 0 8px var(--green);}
+.skill-node:hover{border-color:var(--border-hi);background:rgba(0,255,180,0.06);transform:translateX(5px);}
+.sn-icon{font-size:1.3rem;margin-bottom:0.7rem;}
+.sn-name{font-family:'Orbitron',monospace;font-size:0.65rem;font-weight:600;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.9rem;}
+.stags{display:flex;flex-wrap:wrap;gap:0.35rem;}
+.stag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;padding:0.18rem 0.55rem;border:1px solid rgba(0,220,150,0.18);color:var(--dim);background:rgba(0,220,150,0.04);transition:all 0.2s;}
+.skill-node:hover .stag{border-color:rgba(0,220,150,0.4);color:var(--text);}
+
+/* ── QUEST LOG / LEVEL 3 ── */
+.quest{display:flex;flex-direction:column;gap:0;}
+.quest-item{display:grid;grid-template-columns:140px 1fr;gap:2rem;padding:2.2rem 0;border-bottom:1px solid rgba(0,220,150,0.07);position:relative;}
+.quest-item::before{content:'';position:absolute;left:138px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--border),transparent);}
+.q-dot{position:absolute;left:132px;top:2.4rem;width:12px;height:12px;background:var(--green);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);box-shadow:0 0 10px var(--green);}
+.q-time{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--green);letter-spacing:0.08em;padding-top:0.3rem;line-height:1.7;}
+.q-content{}
+.q-title{font-family:'Orbitron',monospace;font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.2rem;letter-spacing:0.04em;}
+.q-org{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--gold);margin-bottom:1rem;letter-spacing:0.1em;}
+.q-bullets{list-style:none;display:flex;flex-direction:column;gap:0.45rem;margin-bottom:1rem;}
+.q-bullets li{font-size:0.83rem;color:var(--dim);padding-left:1.2rem;position:relative;line-height:1.65;}
+.q-bullets li::before{content:'▶';position:absolute;left:0;color:var(--green);font-size:0.48rem;top:0.38rem;}
+.qtags{display:flex;flex-wrap:wrap;gap:0.35rem;}
+.qtag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;padding:0.18rem 0.55rem;border:1px solid rgba(0,170,255,0.25);color:var(--blue);background:rgba(0,170,255,0.04);}
+
+/* FORAGE QUESTS */
+.forage-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem;}
+.forage-card{background:var(--panel);border:1px solid var(--border);padding:1.4rem;position:relative;transition:all 0.25s;}
+.forage-card:hover{border-color:var(--border-hi);transform:translateY(-3px);}
+.forage-card::before{content:'SIMULATION';position:absolute;top:0.6rem;right:0.8rem;font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:var(--dim);letter-spacing:0.12em;}
+.fc-company{font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;color:var(--gold);margin-bottom:0.4rem;}
+.fc-title{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--text);margin-bottom:0.7rem;}
+.fc-date{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--green);margin-bottom:0.8rem;}
+.fc-bullets{list-style:none;display:flex;flex-direction:column;gap:0.35rem;}
+.fc-bullets li{font-size:0.78rem;color:var(--dim);padding-left:1rem;position:relative;line-height:1.6;}
+.fc-bullets li::before{content:'▶';position:absolute;left:0;color:var(--gold);font-size:0.4rem;top:0.38rem;}
+
+/* ── ACHIEVEMENTS / LEVEL 4 ── */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.1rem;}
+.ach-card{background:var(--panel);border:1px solid var(--border);padding:1.8rem;position:relative;overflow:hidden;transition:all 0.25s;}
+.ach-card::after{content:'';position:absolute;top:0;right:0;width:70px;height:70px;background:linear-gradient(225deg,rgba(0,255,180,0.07),transparent);}
+.ach-card:hover{border-color:var(--border-hi);box-shadow:0 0 30px rgba(0,255,180,0.07),inset 0 0 30px rgba(0,255,180,0.03);transform:translateY(-5px);}
+.ach-icon{font-size:1.7rem;margin-bottom:0.8rem;}
+.ach-rarity{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.4rem;}
+.r-epic{color:var(--purple);}
+.r-rare{color:var(--blue);}
+.r-unc{color:var(--green);}
+.r-com{color:var(--dim);}
+.ach-title{font-family:'Orbitron',monospace;font-size:0.76rem;font-weight:600;color:var(--text);margin-bottom:0.7rem;letter-spacing:0.04em;}
+.ach-desc{font-size:0.82rem;color:var(--dim);line-height:1.75;margin-bottom:1.1rem;}
+.ach-reward{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--gold);background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);padding:0.4rem 0.8rem;margin-bottom:0.9rem;}
+.atags{display:flex;flex-wrap:wrap;gap:0.35rem;}
+.atag{font-family:'Share Tech Mono',monospace;font-size:0.58rem;padding:0.18rem 0.5rem;border:1px solid var(--border);color:var(--dim);}
+
+/* ── EDUCATION / LEVEL 5 ── */
+.edu-stack{display:flex;flex-direction:column;gap:1rem;}
+.edu-panel{background:var(--panel);border:1px solid var(--border);padding:1.4rem 2rem;display:flex;align-items:center;gap:1.5rem;transition:all 0.2s;position:relative;overflow:hidden;}
+.edu-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.4s;}
+.edu-panel:hover{border-color:var(--border-hi);}
+.edu-panel:hover::before{transform:scaleX(1);}
+.edu-rank{font-family:'Press Start 2P',monospace;font-size:1.1rem;color:var(--green);text-shadow:0 0 10px var(--green);min-width:40px;text-align:center;}
+.edu-info{flex:1;}
+.edu-deg{font-family:'Orbitron',monospace;font-size:0.78rem;font-weight:600;color:var(--text);letter-spacing:0.04em;margin-bottom:0.2rem;}
+.edu-sch{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--dim);margin-bottom:0.18rem;}
+.edu-dt{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--green);}
+.edu-status{font-family:'Share Tech Mono',monospace;font-size:0.58rem;padding:0.28rem 0.7rem;letter-spacing:0.1em;white-space:nowrap;}
+.s-act{border:1px solid rgba(255,215,0,0.4);color:var(--gold);background:rgba(255,215,0,0.07);animation:pgold 2s infinite;}
+.s-done{border:1px solid rgba(0,255,180,0.3);color:var(--green);background:rgba(0,255,180,0.05);}
+@keyframes pgold{0%,100%{box-shadow:0 0 0 rgba(255,215,0,0);}50%{box-shadow:0 0 14px rgba(255,215,0,0.3);}}
+
+/* CERTS */
+.cert-row{display:flex;gap:1rem;flex-wrap:wrap;}
+.cert-card{flex:1;min-width:250px;background:var(--panel);border:1px solid var(--border);padding:1.3rem 1.5rem;text-decoration:none;display:flex;align-items:center;gap:1rem;position:relative;overflow:hidden;transition:all 0.25s;}
+.cert-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.3s;}
+.cert-card:hover{border-color:var(--border-hi);transform:translateY(-3px);}
+.cert-card:hover::after{transform:scaleX(1);}
+.cert-emb{font-size:1.8rem;}
+.cert-nm{font-family:'Orbitron',monospace;font-size:0.68rem;font-weight:600;color:var(--text);display:block;margin-bottom:0.15rem;}
+.cert-is{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--green);display:block;margin-bottom:0.15rem;}
+.cert-ex{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);}
+.cert-vf{position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);transition:color 0.2s;}
+.cert-card:hover .cert-vf{color:var(--green);}
+
+/* ── AVAILABILITY / LEVEL 6 ── */
+.avail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-bottom:1.2rem;}
+.avail-panel{background:var(--panel);border:1px solid var(--border);padding:1.8rem;position:relative;overflow:hidden;transition:all 0.25s;}
+.avail-panel.on{border-color:rgba(0,255,180,0.35);}
+.avail-panel.on::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);}
+.avail-panel:hover{border-color:var(--border-hi);transform:translateY(-4px);}
+.ap-icon{font-size:1.8rem;margin-bottom:0.9rem;}
+.ap-type{font-family:'Orbitron',monospace;font-size:0.75rem;font-weight:600;color:var(--text);letter-spacing:0.06em;margin-bottom:0.6rem;}
+.ap-desc{font-size:0.82rem;color:var(--dim);line-height:1.75;margin-bottom:1.1rem;}
+.ap-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;padding:0.28rem 0.75rem;display:inline-block;letter-spacing:0.12em;}
+.t-g{border:1px solid rgba(0,255,180,0.35);color:var(--green);background:rgba(0,255,180,0.06);}
+.t-go{border:1px solid rgba(255,215,0,0.35);color:var(--gold);background:rgba(255,215,0,0.06);}
+.t-b{border:1px solid rgba(0,184,255,0.35);color:var(--blue);background:rgba(0,184,255,0.05);}
+.avail-loc{display:flex;align-items:center;gap:0.9rem;background:var(--panel);border:1px solid var(--border);padding:1rem 1.5rem;font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--dim);}
+.avail-loc strong{color:var(--text);}
+
+/* ── CONTACT / LEVEL 7 ── */
+#contact{text-align:center;}
+.contact-sub{font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);max-width:480px;margin:0 auto 3rem;line-height:1.9;}
+.contact-grid{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.cbtn{display:flex;align-items:center;gap:0.6rem;text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.9rem 1.6rem;background:var(--panel);transition:all 0.2s;position:relative;overflow:hidden;}
+.cbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,180,0.06),transparent);opacity:0;transition:opacity 0.2s;}
+.cbtn:hover{border-color:var(--green);color:var(--green);text-shadow:0 0 8px var(--green);}
+.cbtn:hover::before{opacity:1;}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:2rem 5%;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);letter-spacing:0.12em;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.65s,transform 0.65s;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* LEVEL UNLOCK FLASH */
+.level-flash{position:fixed;inset:0;background:rgba(0,255,180,0.04);pointer-events:none;z-index:998;opacity:0;transition:opacity 0.3s;}
+.level-flash.flash{animation:flashAnim 0.5s forwards;}
+@keyframes flashAnim{0%{opacity:1;}100%{opacity:0;}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;}
+  .char-card{display:none;}
+  nav ul{gap:0.15rem;}
+  nav a{font-size:0.55rem;padding:0.3rem 0.5rem;}
+  .quest-item{grid-template-columns:1fr;}
+  .quest-item::before,.q-dot{display:none;}
+  .forage-grid{grid-template-columns:1fr;}
+  .level-hud{display:none;}
+}
+</style>
 </head>
 <body>
+<div class="grid-bg"></div>
+<div class="particles" id="particles"></div>
+<div class="level-flash" id="flash"></div>
 
-<div class="glow-orb glow-orb-1"></div>
-<div class="glow-orb glow-orb-2"></div>
+<!-- LEVEL HUD -->
+<div class="level-hud">
+  <div class="lhud-item active" data-label="LVL 1 — HERO" data-href="#hero">1</div>
+  <div class="lhud-item" data-label="LVL 2 — SKILLS" data-href="#skills">2</div>
+  <div class="lhud-item" data-label="LVL 3 — QUESTS" data-href="#experience">3</div>
+  <div class="lhud-item" data-label="LVL 4 — ACHIEVEMENTS" data-href="#projects">4</div>
+  <div class="lhud-item" data-label="LVL 5 — EDUCATION" data-href="#education">5</div>
+  <div class="lhud-item" data-label="LVL 6 — STATUS" data-href="#availability">6</div>
+  <div class="lhud-item" data-label="LVL 7 — CONTACT" data-href="#contact">7</div>
+</div>
 
 <!-- NAV -->
 <nav>
   <div class="nav-logo">AKB.EXE</div>
   <ul>
-    <li><a href="#about">Profile</a></li>
+    <li><a href="#hero">Profile</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Quests</a></li>
     <li><a href="#projects">Achievements</a></li>
+    <li><a href="#education">Education</a></li>
     <li><a href="#availability">Status</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-inner">
-    <div class="hero-left">
-      <div class="hero-tag">IT Support &amp; Systems Professional</div>
-      <div class="hero-name">Anvesh<br/><span class="green">Kumar Boda</span></div>
-      <div class="hero-class">Assistant System Engineer</div>
-      <p class="hero-bio">IT Support professional with 2+ years at Tata Consultancy Services, specializing in enterprise print services, thin-client management, and cloud infrastructure — supporting nationwide US healthcare environments at scale.</p>
-      <div class="hero-btns">
-        <a href="#projects" class="btn-game">View Achievements</a>
-        <a href="#contact" class="btn-game-outline">Send Message</a>
-      </div>
-    </div>
-
-    <!-- CHARACTER CARD -->
-    <div class="char-card">
-      <div class="char-card-corner tl"></div>
-      <div class="char-card-corner tr"></div>
-      <div class="char-card-corner bl"></div>
-      <div class="char-card-corner br"></div>
-
-      <div class="char-header">
-        <div class="char-avatar">AK</div>
-        <div class="char-header-info">
-          <div class="char-name-sm">ANVESH_KUMAR</div>
-          <div class="char-level">⭐ LVL 5 · IT PROFESSIONAL</div>
-        </div>
-      </div>
-
-      <div class="char-stats">
-        <div class="stat-row">
-          <div class="stat-label-row">
-            <span class="stat-name">🖨️ Print Management</span>
-            <span class="stat-val">95/100</span>
-          </div>
-          <div class="xp-bar"><div class="xp-fill" style="width:95%"></div></div>
-        </div>
-        <div class="stat-row">
-          <div class="stat-label-row">
-            <span class="stat-name">💻 Thin Client Ops</span>
-            <span class="stat-val">90/100</span>
-          </div>
-          <div class="xp-bar"><div class="xp-fill" style="width:90%; animation-delay:0.1s"></div></div>
-        </div>
-        <div class="stat-row">
-          <div class="stat-label-row">
-            <span class="stat-name">☁️ Cloud Platforms</span>
-            <span class="stat-val">80/100</span>
-          </div>
-          <div class="xp-bar"><div class="xp-fill" style="width:80%; animation-delay:0.2s"></div></div>
-        </div>
-        <div class="stat-row">
-          <div class="stat-label-row">
-            <span class="stat-name">⚙️ Automation</span>
-            <span class="stat-val">82/100</span>
-          </div>
-          <div class="xp-bar"><div class="xp-fill" style="width:82%; animation-delay:0.3s"></div></div>
-        </div>
-        <div class="stat-row">
-          <div class="stat-label-row">
-            <span class="stat-name">🎫 ITSM / ServiceNow</span>
-            <span class="stat-val">88/100</span>
-          </div>
-          <div class="xp-bar"><div class="xp-fill" style="width:88%; animation-delay:0.4s"></div></div>
-        </div>
-        <div class="stat-row">
-          <div class="stat-label-row">
-            <span class="stat-name">🌐 Networking</span>
-            <span class="stat-val">75/100</span>
-          </div>
-          <div class="xp-bar"><div class="xp-fill" style="width:75%; animation-delay:0.5s"></div></div>
-        </div>
-      </div>
-
-      <div class="char-badges">
-        <span class="badge-chip">🏅 GCP Certified</span>
-        <span class="badge-chip">🏅 Azure Certified</span>
-        <span class="badge-chip">📍 Melbourne, AU</span>
-        <span class="badge-chip">🌏 EN · HI · TE</span>
-      </div>
-    </div>
+<!-- ══════════════════════════════════════
+     LEVEL 1 — HERO
+══════════════════════════════════════ -->
+<section class="game-section" id="hero" data-level="1">
+  <div class="level-header">
+    <div class="level-badge">LEVEL 01</div>
+    <div class="level-title">PLAYER <span class="hl">PROFILE</span></div>
+    <div class="level-line"></div>
   </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="section-header reveal">
-    <div class="section-prefix">Player Profile</div>
-    <h2>ABOUT <span class="accent">ME</span></h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start;" class="reveal">
+  <div class="hero-grid">
     <div>
-      <p style="color:var(--text-dim); font-size:0.95rem; line-height:1.9; margin-bottom:1.2rem;">IT Support professional based in Tarneit, Victoria, Australia, with hands-on experience supporting enterprise-scale healthcare IT environments across the US at Tata Consultancy Services.</p>
-      <p style="color:var(--text-dim); font-size:0.95rem; line-height:1.9; margin-bottom:1.2rem;">Core expertise in enterprise print management (LRS), thin-client administration (UMS), device fleet operations, and SLA-driven incident response — administering thousands of endpoints for DaVita Dialysis nationwide facilities.</p>
-      <p style="color:var(--text-dim); font-size:0.95rem; line-height:1.9;">Scripting skills in PowerShell and Python for automated rollouts, with active cloud certifications in Google Cloud and Microsoft Azure. Fluent in English, Hindi, and Telugu.</p>
-    </div>
-    <div style="display:flex; flex-direction:column; gap:0.8rem;">
-      <div style="background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--green); padding:1.2rem 1.5rem;">
-        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--green); margin-bottom:0.3rem;">SPECIALIZATION</div>
-        <div style="font-size:0.85rem; color:var(--text-dim);">Enterprise Print Services (LRS) &amp; Thin-Client Management (UMS)</div>
-      </div>
-      <div style="background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--gold); padding:1.2rem 1.5rem;">
-        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--gold); margin-bottom:0.3rem;">NOTABLE CLIENT</div>
-        <div style="font-size:0.85rem; color:var(--text-dim);">DaVita Dialysis — US-wide healthcare IT support across nationwide facilities</div>
-      </div>
-      <div style="background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--blue); padding:1.2rem 1.5rem;">
-        <div style="font-family:'Orbitron',monospace; font-size:0.7rem; color:var(--blue); margin-bottom:0.3rem;">CURRENT MISSION</div>
-        <div style="font-size:0.85rem; color:var(--text-dim);">Master of IT &amp; Systems · Victorian Institute of Technology · 2026</div>
+      <div class="hero-tag">IT Support &amp; Systems Professional</div>
+      <div class="hero-name">Anvesh<br/><span class="g">Kumar Boda</span></div>
+      <div class="hero-class">Assistant System Engineer</div>
+      <p class="hero-bio">IT Support professional with 2+ years at Tata Consultancy Services managing print services and thin-client infrastructure for a major US healthcare client — supporting thousands of endpoints across nationwide dialysis centres. Skilled in automation, deployment, device fleet management, incident handling, and cloud/network platforms.</p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn-g">View Achievements</a>
+        <a href="#contact" class="btn-go">Initiate Contact</a>
       </div>
     </div>
-  </div>
-
-  <!-- CERTS -->
-  <div style="margin-top:3rem;" class="reveal">
-    <div style="font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:var(--green); letter-spacing:0.2em; margin-bottom:1rem;">// VERIFIED CREDENTIALS</div>
-    <div class="certs-row">
-      <a class="cert-card" href="https://www.credential.net/267a4bb9-0662-433c-b736-77ad2727cf3d?username=anveshkumarboda138158" target="_blank" rel="noopener">
-        <div class="cert-emblem">🟡</div>
-        <div class="cert-info">
-          <span class="cert-name">Associate Cloud Engineer</span>
-          <span class="cert-issuer">Google Cloud</span>
-          <span class="cert-expiry">Aug 2023 — Aug 2026</span>
+    <div class="char-card">
+      <div class="cc tl"></div><div class="cc tr"></div><div class="cc bl"></div><div class="cc br"></div>
+      <div class="char-top">
+        <div class="char-avatar">AK</div>
+        <div>
+          <div class="char-name">ANVESH_KUMAR_BODA</div>
+          <div class="char-lvl">⭐ LEVEL 7 · MID-LEVEL IT PRO</div>
+          <div class="char-loc">📍 Tarneit, Victoria, Australia</div>
         </div>
-        <span class="cert-verify">↗ VERIFY</span>
-      </a>
-      <a class="cert-card" href="https://learn.microsoft.com/en-us/users/AnveshKumarBoda-7245/credentials/C2CB77A5EBEAD1E2?ref=https%3A%2F%2Fwww.linkedin.com%2F" target="_blank" rel="noopener">
-        <div class="cert-emblem">🔵</div>
-        <div class="cert-info">
-          <span class="cert-name">Azure Network Engineer Associate</span>
-          <span class="cert-issuer">Microsoft</span>
-          <span class="cert-expiry">Mar 2024 — Mar 2027</span>
-        </div>
-        <span class="cert-verify">↗ VERIFY</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- SKILLS -->
-<section id="skills">
-  <div class="section-header reveal">
-    <div class="section-prefix">Skill Tree</div>
-    <h2>CORE <span class="accent">SKILLS</span></h2>
-    <div class="section-line"></div>
-  </div>
-  <div class="skills-tree reveal">
-    <div class="skill-node">
-      <div class="skill-node-icon">🖨️</div>
-      <div class="skill-node-name">Print &amp; Endpoint Mgmt</div>
-      <div class="skill-tags">
-        <span class="stag">LRS Print Portal</span>
-        <span class="stag">Firmware Updates</span>
-        <span class="stag">Static IP Config</span>
-        <span class="stag">Device Compliance</span>
-        <span class="stag">Fleet Reporting</span>
       </div>
-    </div>
-    <div class="skill-node">
-      <div class="skill-node-icon">💻</div>
-      <div class="skill-node-name">Thin Client Admin</div>
-      <div class="skill-tags">
-        <span class="stag">UMS Platform</span>
-        <span class="stag">Device Enrollment</span>
-        <span class="stag">Policy Management</span>
-        <span class="stag">Lifecycle Hygiene</span>
-        <span class="stag">Artifactory</span>
-      </div>
-    </div>
-    <div class="skill-node">
-      <div class="skill-node-icon">☁️</div>
-      <div class="skill-node-name">Cloud Platforms</div>
-      <div class="skill-tags">
-        <span class="stag">Google Cloud</span>
-        <span class="stag">Microsoft Azure</span>
-        <span class="stag">AWS</span>
-        <span class="stag">Azure Networking</span>
-      </div>
-    </div>
-    <div class="skill-node">
-      <div class="skill-node-icon">⚙️</div>
-      <div class="skill-node-name">Scripting &amp; Automation</div>
-      <div class="skill-tags">
-        <span class="stag">PowerShell</span>
-        <span class="stag">Python</span>
-        <span class="stag">C</span>
-        <span class="stag">Auto Rollouts</span>
-        <span class="stag">Health Checks</span>
-      </div>
-    </div>
-    <div class="skill-node">
-      <div class="skill-node-icon">🎫</div>
-      <div class="skill-node-name">ITSM &amp; Incident Mgmt</div>
-      <div class="skill-tags">
-        <span class="stag">ServiceNow</span>
-        <span class="stag">SLA Compliance</span>
-        <span class="stag">Incident Response</span>
-        <span class="stag">Stakeholder Reports</span>
-      </div>
-    </div>
-    <div class="skill-node">
-      <div class="skill-node-icon">🖥️</div>
-      <div class="skill-node-name">Systems &amp; Databases</div>
-      <div class="skill-tags">
-        <span class="stag">Windows</span>
-        <span class="stag">Linux</span>
-        <span class="stag">MySQL</span>
+      <div class="stat-row"><div class="stat-top"><span class="stat-n">🖨️ Print Management (LRS)</span><span class="stat-v">95/100</span></div><div class="xbar"><div class="xfill" style="width:95%;animation-delay:0.8s"></div></div></div>
+      <div class="stat-row"><div class="stat-top"><span class="stat-n">💻 Thin Client Ops (UMS)</span><span class="stat-v">92/100</span></div><div class="xbar"><div class="xfill" style="width:92%;animation-delay:0.95s"></div></div></div>
+      <div class="stat-row"><div class="stat-top"><span class="stat-n">⚙️ PowerShell / Automation</span><span class="stat-v">85/100</span></div><div class="xbar"><div class="xfill" style="width:85%;animation-delay:1.1s"></div></div></div>
+      <div class="stat-row"><div class="stat-top"><span class="stat-n">☁️ Cloud Platforms</span><span class="stat-v">80/100</span></div><div class="xbar"><div class="xfill" style="width:80%;animation-delay:1.25s"></div></div></div>
+      <div class="stat-row"><div class="stat-top"><span class="stat-n">🎫 ServiceNow / ITSM</span><span class="stat-v">88/100</span></div><div class="xbar"><div class="xfill" style="width:88%;animation-delay:1.4s"></div></div></div>
+      <div class="stat-row"><div class="stat-top"><span class="stat-n">🌐 Cisco Meraki / Network</span><span class="stat-v">75/100</span></div><div class="xbar"><div class="xfill" style="width:75%;animation-delay:1.55s"></div></div></div>
+      <div class="chip-row">
+        <span class="chip">🏅 GCP Certified</span>
+        <span class="chip">🏅 Azure Certified</span>
+        <span class="chip">🌏 EN·HI·TE</span>
+        <span class="chip">📚 MIT&amp;S 2026</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- QUEST LOG (EXPERIENCE) -->
-<section id="experience">
-  <div class="section-header reveal">
-    <div class="section-prefix">Quest Log</div>
-    <h2>WORK <span class="accent">EXPERIENCE</span></h2>
-    <div class="section-line"></div>
+<div class="sec-divider" id="div-2">
+  <div class="unlock-line" style="background:linear-gradient(90deg,transparent,var(--border));"></div>
+  <a class="unlock-btn" href="#skills" data-unlocks="2" onclick="unlockLevel(2);return false;">
+    <div class="unlock-lv" style="background:var(--gold);color:#000;">LV 02</div>
+    <div class="unlock-info">
+      <span class="unlock-label">▼ Click to Unlock Next Level</span>
+      <span class="unlock-title" style="color:var(--gold);">Skill Tree</span>
+      <span class="unlock-preview">PowerShell · LRS · UMS · GCP · Azure · Cisco Meraki · 6 skill nodes</span>
+    </div>
+    <span class="unlock-arrow" style="color:var(--gold);">▶ UNLOCK</span>
+  </a>
+  <div class="unlock-line" style="background:linear-gradient(90deg,var(--border),transparent);"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LEVEL 2 — SKILLS
+══════════════════════════════════════ -->
+<section class="game-section level-locked" id="skills" data-level="2">
+  <div class="level-header reveal">
+    <div class="level-badge gold">LEVEL 02</div>
+    <div class="level-title">SKILL <span class="hl-gold">TREE</span></div>
+    <div class="level-line" style="background:linear-gradient(90deg,var(--gold),transparent);"></div>
+  </div>
+  <div class="skill-tree reveal">
+    <div class="skill-node">
+      <div class="sn-icon">🖨️</div>
+      <div class="sn-name">Print Management</div>
+      <div class="stags"><span class="stag">LRS Portal</span><span class="stag">Firmware Updates</span><span class="stag">Static IP Config</span><span class="stag">Device Compliance</span><span class="stag">Fleet Reporting</span><span class="stag">Security Updates</span></div>
+    </div>
+    <div class="skill-node">
+      <div class="sn-icon">💻</div>
+      <div class="sn-name">Thin Client Admin</div>
+      <div class="stags"><span class="stag">UMS Platform</span><span class="stag">Enrollment</span><span class="stag">Policy Deployment</span><span class="stag">Lifecycle Hygiene</span><span class="stag">Decommissioning</span><span class="stag">Artifactory</span></div>
+    </div>
+    <div class="skill-node">
+      <div class="sn-icon">☁️</div>
+      <div class="sn-name">Cloud Platforms</div>
+      <div class="stags"><span class="stag">GCP</span><span class="stag">Microsoft Azure</span><span class="stag">AWS</span><span class="stag">Azure Networking</span></div>
+    </div>
+    <div class="skill-node">
+      <div class="sn-icon">⚙️</div>
+      <div class="sn-name">Scripting &amp; Automation</div>
+      <div class="stags"><span class="stag">PowerShell</span><span class="stag">Python</span><span class="stag">C</span><span class="stag">Rollout Validation</span><span class="stag">Health Check Scripts</span></div>
+    </div>
+    <div class="skill-node">
+      <div class="sn-icon">🎫</div>
+      <div class="sn-name">ITSM &amp; Incident Mgmt</div>
+      <div class="stags"><span class="stag">ServiceNow</span><span class="stag">SLA Compliance</span><span class="stag">Incident Triage</span><span class="stag">Escalation</span><span class="stag">Stakeholder Comms</span></div>
+    </div>
+    <div class="skill-node">
+      <div class="sn-icon">🌐</div>
+      <div class="sn-name">Network &amp; Systems</div>
+      <div class="stags"><span class="stag">Cisco Meraki</span><span class="stag">Windows</span><span class="stag">Linux</span><span class="stag">MySQL</span><span class="stag">Microsoft Suite</span><span class="stag">Confluence</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider divider-locked" id="div-3">
+  <div class="unlock-line"></div>
+  <a class="unlock-btn" href="#experience" data-unlocks="3" onclick="unlockLevel(3);return false;">
+    <div class="unlock-lv" style="background:var(--blue);color:#000;">LV 03</div>
+    <div class="unlock-info">
+      <span class="unlock-label">▼ Click to Unlock Next Level</span>
+      <span class="unlock-title" style="color:var(--blue);">Quest Log</span>
+      <span class="unlock-preview">TCS · DaVita Dialysis · Deloitte · nbn co · Full experience log</span>
+    </div>
+    <span class="unlock-arrow" style="color:var(--blue);">▶ UNLOCK</span>
+  </a>
+  <div class="unlock-line" style="background:linear-gradient(90deg,var(--border),transparent);"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LEVEL 3 — QUEST LOG
+══════════════════════════════════════ -->
+<section class="game-section level-locked" id="experience" data-level="3">
+  <div class="level-header reveal">
+    <div class="level-badge blue">LEVEL 03</div>
+    <div class="level-title">QUEST <span class="hl" style="color:var(--blue);text-shadow:0 0 20px rgba(0,184,255,0.4);">LOG</span></div>
+    <div class="level-line" style="background:linear-gradient(90deg,var(--blue),transparent);"></div>
   </div>
 
-  <div class="quest-log reveal">
+  <!-- MAIN QUEST -->
+  <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--green);letter-spacing:0.22em;margin-bottom:1rem;" class="reveal">// MAIN QUEST</div>
+  <div class="quest reveal">
     <div class="quest-item">
-      <div class="quest-time">SEP 2022<br/>—<br/>OCT 2024</div>
-      <div class="quest-dot"></div>
-      <div class="quest-content">
-        <div class="quest-title">Assistant System Engineer</div>
-        <div class="quest-org">⚔️ Tata Consultancy Services · Hyderabad, India</div>
-        <ul class="quest-bullets">
-          <li>Supported print services and thin client operations for US-based healthcare client DaVita Dialysis, ensuring high availability across nationwide facilities.</li>
-          <li>Administered the LRS print management portal: onboarded new printers, applied firmware updates, and maintained device compliance to prevent outages.</li>
-          <li>Configured printers to site requirements; assigned dedicated static IP addresses and validated connectivity for dialysis centres.</li>
-          <li>Monitored and triaged ServiceNow tickets, meeting SLA targets through timely incident resolution and clear stakeholder communication.</li>
-          <li>Prepared weekly and monthly print management reports for leadership, tracking fleet health, incidents, and remediation actions.</li>
-          <li>Managed thin clients via the UMS platform, including enrollment, policy updates, and lifecycle hygiene.</li>
-          <li>Executed weekly deployments using packages from the development team (via Artifactory) and validated rollouts at scale with automated PowerShell scripts.</li>
-          <li>Generated thin client health reports to retire stale endpoints and onboard replacements, keeping accurate inventory for thousands of devices.</li>
+      <div class="q-time">SEPT 2022<br/>—<br/>OCT 2024</div>
+      <div class="q-dot"></div>
+      <div class="q-content">
+        <div class="q-title">Assistant System Engineer</div>
+        <div class="q-org">⚔️ Tata Consultancy Services · Hyderabad, India</div>
+        <ul class="q-bullets">
+          <li>Maintained print services and thin-client infrastructure for US-based healthcare client DaVita Dialysis, supporting thousands of endpoints across nationwide dialysis centres and ensuring high availability.</li>
+          <li>Administered the LRS print management portal — onboarding printers, applying firmware/security updates, and enforcing device compliance to reduce outage risk.</li>
+          <li>Configured printers to site requirements, assigned static IPs, and validated network connectivity to ensure uninterrupted operations at clinic sites.</li>
+          <li>Monitored and triaged incidents in ServiceNow; consistently met SLA targets through timely resolution, escalation, and stakeholder communication.</li>
+          <li>Prepared weekly and monthly fleet-health reports and dashboards for leadership, tracking incidents, remediation actions, and capacity planning.</li>
+          <li>Managed thin clients via the UMS platform, including enrollment, policy deployment, lifecycle hygiene, and decommissioning of stale endpoints to maintain accurate inventory.</li>
+          <li>Orchestrated weekly package deployments using Artifactory and automated rollout validations with PowerShell scripts to scale deployments and reduce manual errors.</li>
+          <li>Generated device-health and replacement reports to retire obsolete endpoints and streamline onboarding of replacements.</li>
         </ul>
-        <div class="quest-tags">
-          <span class="qtag">LRS</span>
-          <span class="qtag">UMS</span>
-          <span class="qtag">PowerShell</span>
-          <span class="qtag">ServiceNow</span>
-          <span class="qtag">Artifactory</span>
-          <span class="qtag">Python</span>
-          <span class="qtag">Healthcare IT</span>
+        <div class="qtags">
+          <span class="qtag">LRS</span><span class="qtag">UMS</span><span class="qtag">PowerShell</span><span class="qtag">ServiceNow</span><span class="qtag">Artifactory</span><span class="qtag">Python</span><span class="qtag">DaVita Dialysis</span><span class="qtag">Healthcare IT</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- EDUCATION -->
-  <div style="margin-top:3.5rem;" class="reveal">
-    <div style="font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:var(--green); letter-spacing:0.2em; margin-bottom:1rem;">// EDUCATION LOG</div>
-    <div class="edu-cards">
-      <div class="edu-panel">
-        <div class="edu-rank">🎓</div>
-        <div class="edu-info">
-          <div class="edu-degree">Master of Information Technology &amp; Systems</div>
-          <div class="edu-school">Victorian Institute of Technology, Melbourne</div>
-          <div class="edu-date">In Progress · Expected Oct 2026</div>
-        </div>
-        <span class="edu-status status-active">▶ IN PROGRESS</span>
-      </div>
-      <div class="edu-panel">
-        <div class="edu-rank">🎓</div>
-        <div class="edu-info">
-          <div class="edu-degree">Bachelor of Technology</div>
-          <div class="edu-school">Institute of Aeronautical Engineering, Hyderabad</div>
-          <div class="edu-date">Jul 2018 — Aug 2022</div>
-        </div>
-        <span class="edu-status status-done">✔ COMPLETED</span>
-      </div>
+  <!-- SIDE QUESTS -->
+  <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--gold);letter-spacing:0.22em;margin:2.5rem 0 1rem;" class="reveal">// SIDE QUESTS — JOB SIMULATIONS (FORAGE)</div>
+  <div class="forage-grid reveal">
+    <div class="forage-card">
+      <div class="fc-company">⚡ DELOITTE AUSTRALIA</div>
+      <div class="fc-title">Technology Job Simulation</div>
+      <div class="fc-date">February 10, 2026</div>
+      <ul class="fc-bullets">
+        <li>Completed a job simulation involving development and coding.</li>
+        <li>Wrote a proposal for creating a dashboard.</li>
+      </ul>
+    </div>
+    <div class="forage-card">
+      <div class="fc-company">📡 NBN CO</div>
+      <div class="fc-title">Trainee Customer Field Technician Simulation</div>
+      <div class="fc-date">February 2, 2026</div>
+      <ul class="fc-bullets">
+        <li>Completed a simulation involving customer service and troubleshooting for nbn co's Field Technician Team.</li>
+        <li>Documented step-by-step installation process including specific configurations and adjustments.</li>
+        <li>Provided excellent customer service while resolving technical issues.</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<!-- ACHIEVEMENTS (PROJECTS) -->
-<section id="projects">
-  <div class="section-header reveal">
-    <div class="section-prefix">Achievements Unlocked</div>
-    <h2>KEY <span class="accent">PROJECTS</span></h2>
-    <div class="section-line"></div>
+<div class="sec-divider divider-locked" id="div-4">
+  <div class="unlock-line"></div>
+  <a class="unlock-btn" href="#projects" data-unlocks="4" onclick="unlockLevel(4);return false;">
+    <div class="unlock-lv" style="background:var(--purple);color:#fff;">LV 04</div>
+    <div class="unlock-info">
+      <span class="unlock-label">▼ Click to Unlock Next Level</span>
+      <span class="unlock-title" style="color:var(--purple);">Achievements</span>
+      <span class="unlock-preview">6 unlocked badges · Epic · Rare · Uncommon · Common tiers</span>
+    </div>
+    <span class="unlock-arrow" style="color:var(--purple);">▶ UNLOCK</span>
+  </a>
+  <div class="unlock-line" style="background:linear-gradient(90deg,var(--border),transparent);"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LEVEL 4 — ACHIEVEMENTS
+══════════════════════════════════════ -->
+<section class="game-section level-locked" id="projects" data-level="4">
+  <div class="level-header reveal">
+    <div class="level-badge purple">LEVEL 04</div>
+    <div class="level-title">ACHIEVEMENTS <span class="hl" style="color:var(--purple);text-shadow:0 0 20px rgba(191,95,255,0.4);">UNLOCKED</span></div>
+    <div class="level-line" style="background:linear-gradient(90deg,var(--purple),transparent);"></div>
   </div>
-  <div class="achievements-grid reveal">
-    <div class="achievement-card">
+  <div class="ach-grid reveal">
+    <div class="ach-card">
       <div class="ach-icon">🖨️</div>
-      <div class="ach-rarity rarity-epic">◆ EPIC ACHIEVEMENT</div>
+      <div class="ach-rarity r-epic">◆ EPIC — CORE INFRASTRUCTURE</div>
       <div class="ach-title">LRS Print Fleet Standardization</div>
-      <p class="ach-desc">Standardized configurations and static IP assignments across thousands of printers in DaVita Dialysis centres nationwide. Applied firmware updates and maintained device compliance to prevent service disruptions in critical healthcare environments.</p>
-      <div class="ach-reward">⚡ High availability maintained across all US sites</div>
-      <div class="ach-tags">
-        <span class="atag">LRS Portal</span>
-        <span class="atag">Static IP</span>
-        <span class="atag">Firmware</span>
-      </div>
+      <p class="ach-desc">Standardized configurations and static IP assignments across thousands of printers in DaVita Dialysis centres nationwide. Applied firmware and security updates to maintain compliance and prevent service disruptions in critical healthcare environments.</p>
+      <div class="ach-reward">⚡ High availability maintained across all US facilities</div>
+      <div class="atags"><span class="atag">LRS Portal</span><span class="atag">Static IP</span><span class="atag">Firmware</span><span class="atag">Compliance</span></div>
     </div>
-    <div class="achievement-card">
+    <div class="ach-card">
       <div class="ach-icon">⚙️</div>
-      <div class="ach-rarity rarity-epic">◆ EPIC ACHIEVEMENT</div>
+      <div class="ach-rarity r-epic">◆ EPIC — AUTOMATION</div>
       <div class="ach-title">PowerShell Deployment Automation</div>
-      <p class="ach-desc">Developed automated PowerShell scripts to validate weekly thin client deployments at scale, replacing manual verification. Scripts flagged rollout failures and generated actionable health reports, improving deployment reliability.</p>
-      <div class="ach-reward">⚡ Eliminated manual validation bottlenecks</div>
-      <div class="ach-tags">
-        <span class="atag">PowerShell</span>
-        <span class="atag">Artifactory</span>
-        <span class="atag">UMS</span>
-      </div>
+      <p class="ach-desc">Developed automated PowerShell scripts to validate weekly thin client deployments at scale via Artifactory, replacing manual verification. Scripts flagged failures and generated actionable health reports, scaling deployments and reducing manual errors.</p>
+      <div class="ach-reward">⚡ Eliminated manual validation bottlenecks at scale</div>
+      <div class="atags"><span class="atag">PowerShell</span><span class="atag">Artifactory</span><span class="atag">UMS</span><span class="atag">Automation</span></div>
     </div>
-    <div class="achievement-card">
+    <div class="ach-card">
       <div class="ach-icon">💻</div>
-      <div class="ach-rarity rarity-rare">◇ RARE ACHIEVEMENT</div>
+      <div class="ach-rarity r-rare">◇ RARE — LIFECYCLE OPS</div>
       <div class="ach-title">Thin Client Lifecycle Management</div>
-      <p class="ach-desc">Managed the full lifecycle of thousands of thin clients via UMS — from enrollment and policy deployment to health monitoring and stale device retirement. Maintained accurate inventory enabling proactive hardware refresh planning.</p>
+      <p class="ach-desc">Managed full lifecycle of thousands of thin clients via UMS — from enrollment and policy deployment to health monitoring, decommissioning of stale endpoints, and onboarding replacements to maintain accurate fleet inventory.</p>
       <div class="ach-reward">⚡ Accurate fleet inventory for 1000s of endpoints</div>
-      <div class="ach-tags">
-        <span class="atag">UMS</span>
-        <span class="atag">Enrollment</span>
-        <span class="atag">Reporting</span>
-      </div>
+      <div class="atags"><span class="atag">UMS</span><span class="atag">Enrollment</span><span class="atag">Decommission</span><span class="atag">Inventory</span></div>
     </div>
-    <div class="achievement-card">
+    <div class="ach-card">
       <div class="ach-icon">📊</div>
-      <div class="ach-rarity rarity-uncommon">◈ UNCOMMON ACHIEVEMENT</div>
-      <div class="ach-title">SLA Reporting &amp; Fleet Dashboards</div>
-      <p class="ach-desc">Designed and delivered weekly and monthly fleet health reports for senior leadership, tracking incident trends, remediation status, and SLA compliance across the entire print and thin client estate for a critical US healthcare client.</p>
-      <div class="ach-reward">⚡ Consistent SLA compliance all reporting periods</div>
-      <div class="ach-tags">
-        <span class="atag">ServiceNow</span>
-        <span class="atag">Reporting</span>
-        <span class="atag">SLA</span>
-      </div>
+      <div class="ach-rarity r-rare">◇ RARE — REPORTING</div>
+      <div class="ach-title">Fleet Health Dashboards &amp; SLA Reporting</div>
+      <p class="ach-desc">Designed and delivered weekly and monthly fleet-health dashboards for senior leadership, tracking incidents, remediation actions, and capacity planning. Consistently met SLA targets through transparent stakeholder communication.</p>
+      <div class="ach-reward">⚡ Consistent SLA compliance across all reporting periods</div>
+      <div class="atags"><span class="atag">ServiceNow</span><span class="atag">Dashboards</span><span class="atag">SLA</span><span class="atag">Capacity Planning</span></div>
+    </div>
+    <div class="ach-card">
+      <div class="ach-icon">⚡</div>
+      <div class="ach-rarity r-unc">◈ UNCOMMON — SIMULATION</div>
+      <div class="ach-title">Deloitte Tech Simulation — Dashboard Proposal</div>
+      <p class="ach-desc">Completed Deloitte Australia's Technology Job Simulation on Forage, involving development, coding, and writing a structured proposal for a business intelligence dashboard.</p>
+      <div class="ach-reward">⚡ Industry simulation — Feb 2026</div>
+      <div class="atags"><span class="atag">Deloitte</span><span class="atag">Dashboard Design</span><span class="atag">Development</span></div>
+    </div>
+    <div class="ach-card">
+      <div class="ach-icon">📡</div>
+      <div class="ach-rarity r-com">◉ COMMON — SIMULATION</div>
+      <div class="ach-title">nbn co Field Technician Simulation</div>
+      <p class="ach-desc">Completed nbn co's Field Technician Job Simulation on Forage, covering customer service, troubleshooting, and documenting step-by-step installation configurations including specific network adjustments.</p>
+      <div class="ach-reward">⚡ Industry simulation — Feb 2026</div>
+      <div class="atags"><span class="atag">nbn co</span><span class="atag">Field Tech</span><span class="atag">Troubleshooting</span><span class="atag">Customer Service</span></div>
     </div>
   </div>
 </section>
 
-<!-- AVAILABILITY -->
-<section id="availability">
-  <div class="section-header reveal">
-    <div class="section-prefix">Player Status</div>
-    <h2>CURRENT <span class="accent">AVAILABILITY</span></h2>
-    <div class="section-line"></div>
+<div class="sec-divider divider-locked" id="div-5">
+  <div class="unlock-line"></div>
+  <a class="unlock-btn" href="#education" data-unlocks="5" onclick="unlockLevel(5);return false;">
+    <div class="unlock-lv" style="background:var(--red);color:#fff;">LV 05</div>
+    <div class="unlock-info">
+      <span class="unlock-label">▼ Click to Unlock Next Level</span>
+      <span class="unlock-title" style="color:var(--red);">Education &amp; Certs</span>
+      <span class="unlock-preview">VIT Melbourne · IAE Hyderabad · GCP &amp; Azure verified credentials</span>
+    </div>
+    <span class="unlock-arrow" style="color:var(--red);">▶ UNLOCK</span>
+  </a>
+  <div class="unlock-line" style="background:linear-gradient(90deg,var(--border),transparent);"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LEVEL 5 — EDUCATION
+══════════════════════════════════════ -->
+<section class="game-section level-locked" id="education" data-level="5">
+  <div class="level-header reveal">
+    <div class="level-badge red">LEVEL 05</div>
+    <div class="level-title">EDUCATION <span class="hl" style="color:var(--red);text-shadow:0 0 20px rgba(255,51,85,0.4);">&amp; CERTS</span></div>
+    <div class="level-line" style="background:linear-gradient(90deg,var(--red),transparent);"></div>
+  </div>
+
+  <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--green);letter-spacing:0.22em;margin-bottom:1rem;" class="reveal">// ACADEMIC LOG</div>
+  <div class="edu-stack reveal">
+    <div class="edu-panel">
+      <div class="edu-rank">🎓</div>
+      <div class="edu-info">
+        <div class="edu-deg">Master of Science in Information Technology and Systems</div>
+        <div class="edu-sch">Victorian Institute of Technology, Melbourne</div>
+        <div class="edu-dt">Nov 2024 — Present · Expected Oct 2026</div>
+      </div>
+      <span class="edu-status s-act">▶ IN PROGRESS</span>
+    </div>
+    <div class="edu-panel">
+      <div class="edu-rank">🎓</div>
+      <div class="edu-info">
+        <div class="edu-deg">Bachelor of Technology</div>
+        <div class="edu-sch">Institute of Aeronautical Engineering, Hyderabad</div>
+        <div class="edu-dt">Jul 2018 — Aug 2022</div>
+      </div>
+      <span class="edu-status s-done">✔ COMPLETED</span>
+    </div>
+  </div>
+
+  <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--green);letter-spacing:0.22em;margin:2.5rem 0 1rem;" class="reveal">// VERIFIED CREDENTIALS</div>
+  <div class="cert-row reveal">
+    <a class="cert-card" href="https://www.credential.net/267a4bb9-0662-433c-b736-77ad2727cf3d?username=anveshkumarboda138158" target="_blank" rel="noopener">
+      <div class="cert-emb">🟡</div>
+      <div>
+        <span class="cert-nm">Associate Cloud Engineer</span>
+        <span class="cert-is">Google Cloud</span>
+        <span class="cert-ex">Aug 2023 — Aug 2026</span>
+      </div>
+      <span class="cert-vf">↗ VERIFY</span>
+    </a>
+    <a class="cert-card" href="https://learn.microsoft.com/en-us/users/AnveshKumarBoda-7245/credentials/C2CB77A5EBEAD1E2?ref=https%3A%2F%2Fwww.linkedin.com%2F" target="_blank" rel="noopener">
+      <div class="cert-emb">🔵</div>
+      <div>
+        <span class="cert-nm">Azure Network Engineer Associate</span>
+        <span class="cert-is">Microsoft</span>
+        <span class="cert-ex">Mar 2024 — Mar 2027</span>
+      </div>
+      <span class="cert-vf">↗ VERIFY</span>
+    </a>
+  </div>
+</section>
+
+<div class="sec-divider divider-locked" id="div-6">
+  <div class="unlock-line"></div>
+  <a class="unlock-btn" href="#availability" data-unlocks="6" onclick="unlockLevel(6);return false;">
+    <div class="unlock-lv" style="background:var(--green);color:#000;">LV 06</div>
+    <div class="unlock-info">
+      <span class="unlock-label">▼ Click to Unlock Next Level</span>
+      <span class="unlock-title" style="color:var(--green);">Player Status</span>
+      <span class="unlock-preview">Internship · Part-time · Full-time from Oct 2026 · Melbourne &amp; Remote</span>
+    </div>
+    <span class="unlock-arrow" style="color:var(--green);">▶ UNLOCK</span>
+  </a>
+  <div class="unlock-line" style="background:linear-gradient(90deg,var(--border),transparent);"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LEVEL 6 — AVAILABILITY
+══════════════════════════════════════ -->
+<section class="game-section level-locked" id="availability" data-level="6">
+  <div class="level-header reveal">
+    <div class="level-badge">LEVEL 06</div>
+    <div class="level-title">PLAYER <span class="hl">STATUS</span></div>
+    <div class="level-line"></div>
   </div>
   <div class="avail-grid reveal">
-    <div class="avail-panel active-panel">
-      <div class="avail-panel-icon">🕐</div>
-      <div class="avail-panel-type">Internship Roles</div>
-      <p class="avail-panel-desc">Open to full-time internships in IT support, systems administration, cloud, or networking. Available to start immediately.</p>
-      <span class="avail-status-tag status-green">▶ AVAILABLE NOW</span>
+    <div class="avail-panel on">
+      <div class="ap-icon">🕐</div>
+      <div class="ap-type">Internship Roles</div>
+      <p class="ap-desc">Open to full-time internships in IT support, systems administration, cloud, or networking. Available to start immediately.</p>
+      <span class="ap-tag t-g">▶ AVAILABLE NOW</span>
     </div>
-    <div class="avail-panel active-panel">
-      <div class="avail-panel-icon">📅</div>
-      <div class="avail-panel-type">Part-Time Roles</div>
-      <p class="avail-panel-desc">Available for part-time positions until July 2025, balancing work alongside my Master of IT and Systems studies at VIT Melbourne.</p>
-      <span class="avail-status-tag status-gold-tag">⏳ UNTIL JULY 2025</span>
+    <div class="avail-panel on">
+      <div class="ap-icon">📅</div>
+      <div class="ap-type">Part-Time Roles</div>
+      <p class="ap-desc">Available for part-time positions, balancing work alongside Master of IT and Systems studies at VIT Melbourne.</p>
+      <span class="ap-tag t-go">⏳ AVAILABLE NOW</span>
     </div>
     <div class="avail-panel">
-      <div class="avail-panel-icon">🚀</div>
-      <div class="avail-panel-type">Full-Time from Oct 2026</div>
-      <p class="avail-panel-desc">Graduating October 2026 — open to full-time IT systems, cloud infrastructure, or support engineering roles post-completion.</p>
-      <span class="avail-status-tag status-blue">◈ FROM OCT 2026</span>
+      <div class="ap-icon">🚀</div>
+      <div class="ap-type">Full-Time from Oct 2026</div>
+      <p class="ap-desc">Graduating October 2026 — open to full-time IT systems, cloud infrastructure, or support engineering roles post-completion.</p>
+      <span class="ap-tag t-b">◈ FROM OCT 2026</span>
     </div>
   </div>
-  <div class="avail-location reveal">
+  <div class="avail-loc reveal">
     <span>📍</span>
     <span>Based in <strong>Tarneit, Victoria, Australia</strong> — open to roles across <strong>Melbourne</strong> and remote-friendly positions Australia-wide.</span>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact">
-  <div class="section-header contact-title reveal">
-    <div class="section-prefix" style="text-align:center; margin-bottom:0.5rem;">Initiate Contact</div>
-    <h2>GET IN <span class="accent">TOUCH</span></h2>
-    <div class="section-line" style="margin:0.75rem auto 0;"></div>
+<div class="sec-divider divider-locked" id="div-7">
+  <div class="unlock-line"></div>
+  <a class="unlock-btn" href="#contact" data-unlocks="7" onclick="unlockLevel(7);return false;">
+    <div class="unlock-lv" style="background:var(--gold);color:#000;">LV 07</div>
+    <div class="unlock-info">
+      <span class="unlock-label">▼ Final Level — Click to Unlock</span>
+      <span class="unlock-title" style="color:var(--gold);">Initiate Contact</span>
+      <span class="unlock-preview">Email · Phone · LinkedIn · GitHub · Reference contact</span>
+    </div>
+    <span class="unlock-arrow" style="color:var(--gold);">▶ UNLOCK</span>
+  </a>
+  <div class="unlock-line" style="background:linear-gradient(90deg,var(--border),transparent);"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LEVEL 7 — CONTACT
+══════════════════════════════════════ -->
+<section class="game-section level-locked" id="contact" data-level="7">
+  <div class="level-header reveal" style="justify-content:center;">
+    <div class="level-line" style="max-width:120px;"></div>
+    <div class="level-badge gold" style="margin:0 1.5rem;">LEVEL 07</div>
+    <div class="level-line" style="max-width:120px;background:linear-gradient(270deg,var(--gold),transparent);"></div>
   </div>
-  <p class="contact-sub reveal">Open to new IT opportunities in Australia. Send a message — response time: rapid.</p>
+  <div class="level-title reveal" style="text-align:center;margin-bottom:0.5rem;">INITIATE <span class="hl-gold">CONTACT</span></div>
+  <p class="contact-sub reveal">All levels cleared. Open to new IT opportunities in Australia.<br/>Response time: rapid. Ping me anytime.</p>
   <div class="contact-grid reveal">
-    <a href="mailto:anveshkumarboda@gmail.com" class="contact-btn">📧 anveshkumarboda@gmail.com</a>
-    <a href="tel:+610416885767" class="contact-btn">📱 0416 885 767</a>
-    <a href="https://www.linkedin.com/in/anvesh-kumar-boda-402519232/" target="_blank" class="contact-btn">🔗 LinkedIn</a>
+    <a href="mailto:anveshkumarboda@gmail.com" class="cbtn">📧 anveshkumarboda@gmail.com</a>
+    <a href="tel:+610416885767" class="cbtn">📱 0416 885 767</a>
+    <a href="https://www.linkedin.com/in/anvesh-kumar-boda-402519232/" target="_blank" class="cbtn">🔗 LinkedIn</a>
+    <a href="https://github.com/anveshkumarboda12" target="_blank" class="cbtn">💻 GitHub</a>
+  </div>
+
+  <!-- REFERENCE -->
+  <div style="margin-top:3rem;background:var(--panel);border:1px solid var(--border);padding:1.5rem 2rem;max-width:500px;margin-left:auto;margin-right:auto;" class="reveal">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--green);letter-spacing:0.2em;margin-bottom:0.8rem;">// REFERENCE UNLOCKED</div>
+    <div style="font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--text);margin-bottom:0.2rem;">Divya Parupati</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--gold);margin-bottom:0.6rem;">Tata Consultancy Services</div>
+    <a href="mailto:parupatidivya@gmail.com" style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--dim);text-decoration:none;display:block;margin-bottom:0.2rem;">📧 parupatidivya@gmail.com</a>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--dim);">📞 +917997480761</div>
   </div>
 </section>
 
 <footer>
-  &gt; ANVESH_KUMAR_BODA.EXE — IT SUPPORT PROFESSIONAL — TARNEIT, VIC, AU — ALL STATS VERIFIED_
+  &gt; ANVESH_KUMAR_BODA.EXE — ALL 7 LEVELS CLEARED — IT SUPPORT PROFESSIONAL — TARNEIT, VIC, AU_
 </footer>
 
 <script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// ── PARTICLES
+(function(){
+  const c = document.getElementById('particles');
+  for(let i=0;i<30;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.cssText=`left:${Math.random()*100}%;animation-duration:${8+Math.random()*14}s;animation-delay:${Math.random()*10}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;
+    c.appendChild(p);
+  }
+})();
+
+// ── LEVEL UNLOCK SYSTEM
+const unlockedLevels = new Set([1]);
+const flash = document.getElementById('flash');
+
+function unlockLevel(lv) {
+  if(unlockedLevels.has(lv)) return;
+  unlockedLevels.add(lv);
+
+  // 1. Screen flash
+  flash.classList.remove('flash');
+  void flash.offsetWidth;
+  flash.classList.add('flash');
+
+  // 2. Show the section
+  const sectionMap = {2:'skills',3:'experience',4:'projects',5:'education',6:'availability',7:'contact'};
+  const section = document.getElementById(sectionMap[lv]);
+  if(section){
+    section.classList.add('unlocked');
+    // Trigger reveal animations inside it
+    setTimeout(()=>{
+      section.querySelectorAll('.reveal').forEach(el=>{
+        revObs.observe(el);
+      });
+      // Smooth scroll to the newly unlocked section
+      section.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 80);
+  }
+
+  // 3. Show the NEXT divider (so next unlock button appears)
+  const nextDiv = document.getElementById(`div-${lv+1}`);
+  if(nextDiv) nextDiv.classList.add('visible');
+
+  // 4. Update HUD — unlock next level marker
+  const hudItems = document.querySelectorAll('.lhud-item');
+  hudItems.forEach((h,i)=>{
+    if(i+1 <= lv) h.classList.remove('locked');
+    h.classList.toggle('active', i+1===lv);
+  });
+
+  // 5. Disable the clicked unlock button so it can't be clicked again
+  const btn = document.querySelector(`#div-${lv} .unlock-btn`);
+  if(btn){
+    btn.style.opacity='0.4';
+    btn.style.pointerEvents='none';
+    btn.querySelector('.unlock-arrow').textContent='✔ UNLOCKED';
+  }
+}
+
+// ── SCROLL REVEAL (used post-unlock too)
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible');});
+},{threshold:0.08});
+
+// Only observe reveals in level 1 initially
+document.querySelectorAll('#hero .reveal').forEach(el=>revObs.observe(el));
+
+// ── HUD INIT — lock levels 2-7 in HUD
+const hudItems = document.querySelectorAll('.lhud-item');
+hudItems.forEach((h,i)=>{
+  if(i+1 > 1) h.classList.add('locked');
+});
+
+// ── HUD CLICK — only allow unlocked levels
+hudItems.forEach(h=>{
+  h.addEventListener('click',()=>{
+    const lv = parseInt(h.textContent);
+    if(!unlockedLevels.has(lv)) return;
+    const target = document.querySelector(h.dataset.href);
+    if(target) target.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// ── ACTIVE HUD on scroll (only for unlocked sections)
+const secObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const lv = parseInt(e.target.dataset.level);
+      if(unlockedLevels.has(lv)){
+        hudItems.forEach((h,i)=>h.classList.toggle('active', i+1===lv));
+      }
+    }
+  });
+},{threshold:0.4});
+document.querySelectorAll('.game-section').forEach(s=>secObs.observe(s));
+
+// Prevent scroll past level 1 until level 2 is unlocked
+// (disable native scroll jumping to locked sections via anchor)
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const href = a.getAttribute('href');
+    const target = document.querySelector(href);
+    if(target && target.classList.contains('level-locked') && !target.classList.contains('unlocked')){
+      e.preventDefault();
+    }
+  });
+});
 </script>
 </body>
 </html>
