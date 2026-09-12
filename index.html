@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can We Be Us Again?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Karla:wght@400;500&display=swap');
+
+  :root{
+    --ink: #33283f;
+    --paper: #f7f1fb;
+    --paper-warm: #f4ecf9;
+    --rule: #cdb6e8;
+    --accent: #8a5fc4;
+    --accent-deep: #5e3f96;
+    --fade: #9587ab;
+    --moon: #f6ecff;
+    --sky-a: #140b28;
+    --sky-b: #2a1750;
+    --sky-c: #4a2a7a;
+    --rose: #e7a9c9;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    overflow-x:hidden;
+  }
+
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 18px;
+    position:relative;
+    background: linear-gradient(160deg, var(--sky-a) 0%, var(--sky-b) 45%, var(--sky-c) 100%);
+    background-size: 220% 220%;
+    animation: skyDrift 22s ease-in-out infinite;
+  }
+
+  @keyframes skyDrift{
+    0%{background-position:0% 20%;}
+    50%{background-position:100% 80%;}
+    100%{background-position:0% 20%;}
+  }
+
+  /* ---------- ambient sky layer ---------- */
+  #sky{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    overflow:hidden;
+  }
+  .star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:var(--moon);
+    border-radius:50%;
+    opacity:0.25;
+    animation: twinkle 3.5s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:0.12; transform:scale(1);}
+    50%{opacity:0.9; transform:scale(1.7);}
+  }
+  .moon-glow{
+    position:absolute;
+    top:6%;
+    right:10%;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 35%, #fffdf6, var(--moon) 55%, transparent 75%);
+    box-shadow: 0 0 70px 18px rgba(246,236,255,0.35);
+    animation: moonPulse 6s ease-in-out infinite;
+  }
+  @keyframes moonPulse{
+    0%,100%{ filter:brightness(1); }
+    50%{ filter:brightness(1.12); }
+  }
+  .petal{
+    position:absolute;
+    top:-5%;
+    width:10px;
+    height:14px;
+    background: linear-gradient(140deg, var(--rose), var(--accent));
+    border-radius: 60% 20% 60% 20%;
+    opacity:0.55;
+    animation-name: fall;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  @keyframes fall{
+    0%{ transform:translateY(-10vh) translateX(0) rotate(0deg); opacity:0;}
+    10%{ opacity:0.6; }
+    50%{ transform:translateY(50vh) translateX(24px) rotate(160deg); }
+    90%{ opacity:0.5; }
+    100%{ transform:translateY(112vh) translateX(-16px) rotate(320deg); opacity:0; }
+  }
+
+  .stage{
+    width:100%;
+    max-width:640px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ---------- shared screen mechanics ---------- */
+  .screen{
+    display:none;
+  }
+  .screen.active{
+    display:block;
+    animation: rise 1s cubic-bezier(.2,.8,.3,1) forwards;
+  }
+
+  @keyframes rise{
+    from{opacity:0; transform:translateY(22px) scale(0.985);}
+    to{opacity:1; transform:translateY(0) scale(1);}
+  }
+
+  .card{
+    background: var(--paper);
+    border:1px solid var(--rule);
+    border-radius:6px;
+    box-shadow: 0 18px 60px rgba(20,10,40,0.35), 0 0 0 1px rgba(255,255,255,0.4) inset;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:9px;
+    border:1px solid rgba(138,95,196,0.28);
+    border-radius:3px;
+    pointer-events:none;
+  }
+
+  .mark{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:15px;
+    letter-spacing:0.04em;
+    color:var(--fade);
+    margin-bottom:22px;
+  }
+
+  .moon-emblem{
+    width:46px;
+    height:46px;
+    margin:0 auto 20px;
+    position:relative;
+  }
+  .moon-emblem svg{
+    width:100%;
+    height:100%;
+    filter: drop-shadow(0 0 14px rgba(138,95,196,0.55));
+    animation: emblemFloat 4.5s ease-in-out infinite;
+  }
+  @keyframes emblemFloat{
+    0%,100%{ transform:translateY(0) rotate(-2deg); }
+    50%{ transform:translateY(-6px) rotate(2deg); }
+  }
+
+  /* ---------- screen 1 : gate ---------- */
+  #gate{
+    text-align:center;
+    padding:58px 30px;
+  }
+  .gate-question{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-size:clamp(28px, 5vw, 38px);
+    line-height:1.3;
+    margin:0 0 14px;
+    color:var(--accent-deep);
+  }
+  .gate-sub{
+    font-size:15px;
+    color:var(--fade);
+    line-height:1.6;
+    max-width:420px;
+    margin:0 auto 40px;
+  }
+  .honesty-note{
+    margin:34px auto 0;
+    max-width:380px;
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--fade);
+    font-style:italic;
+    font-family:'Cormorant Garamond', serif;
+    opacity:0.85;
+  }
+  .choice-row{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  button{
+    font-family:'Karla', sans-serif;
+    font-size:15px;
+    cursor:pointer;
+    border-radius:30px;
+    transition: all 0.3s cubic-bezier(.2,.8,.3,1);
+  }
+  .choice{
+    padding:13px 30px;
+    border:1px solid var(--accent);
+    background:transparent;
+    color:var(--accent-deep);
+    letter-spacing:0.02em;
+    position:relative;
+    overflow:hidden;
+  }
+  .choice.primary{
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    color:var(--moon);
+    border-color:var(--accent-deep);
+    box-shadow: 0 6px 20px rgba(94,63,150,0.45);
+    animation: gentlePulse 2.8s ease-in-out infinite;
+  }
+  @keyframes gentlePulse{
+    0%,100%{ box-shadow: 0 6px 20px rgba(94,63,150,0.45); }
+    50%{ box-shadow: 0 8px 28px rgba(94,63,150,0.7); }
+  }
+  .choice.primary:hover{
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 10px 30px rgba(94,63,150,0.6);
+    animation-play-state: paused;
+  }
+  .choice:not(.primary):hover{
+    background:rgba(138,95,196,0.1);
+    transform: translateY(-1px);
+  }
+  .choice:active{ transform: scale(0.97); }
+
+  /* ---------- decline state ---------- */
+  #decline{
+    text-align:center;
+    padding:60px 30px;
+  }
+  #decline p{
+    font-family:'Cormorant Garamond', serif;
+    font-size:22px;
+    line-height:1.7;
+    color:var(--ink);
+  }
+  #decline .signature{
+    margin-top:26px;
+    font-size:14px;
+    color:var(--fade);
+    font-style:italic;
+    font-family:'Cormorant Garamond', serif;
+  }
+  .back-link{
+    display:inline-block;
+    margin-top:34px;
+    font-size:13px;
+    color:var(--fade);
+    text-decoration:underline;
+    background:none;
+    border:none;
+    padding:0;
+    border-radius:0;
+  }
+
+  /* ---------- screen 2 : small note ---------- */
+  #note{
+    text-align:center;
+    padding:70px 34px;
+  }
+  #note .note-text{
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(22px, 4vw, 27px);
+    line-height:1.85;
+    color:var(--ink);
+    max-width:460px;
+    margin:0 auto 44px;
+  }
+  #note .note-text em{ color:var(--accent-deep); font-style:italic; }
+
+  .playlist{
+    max-width:280px;
+    margin:0 auto 40px;
+    padding:18px 22px;
+    border:1px solid var(--rule);
+    border-radius:12px;
+    background: rgba(138,95,196,0.06);
+    text-align:left;
+  }
+  .playlist-label{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:11.5px;
+    letter-spacing:0.03em;
+    color:var(--fade);
+    margin-bottom:10px;
+  }
+  .playlist-label svg{ color:var(--accent); flex-shrink:0; }
+  .track{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:16px;
+    color:var(--accent-deep);
+    padding:4px 0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .note-ico{
+    font-style:normal;
+    font-size:12px;
+    color:var(--accent);
+    animation: notePulse 2.4s ease-in-out infinite;
+  }
+  .track:nth-child(3) .note-ico{ animation-delay:0.3s; }
+  .track:nth-child(4) .note-ico{ animation-delay:0.6s; }
+  @keyframes notePulse{
+    0%,100%{ opacity:0.5; transform:scale(1); }
+    50%{ opacity:1; transform:scale(1.2); }
+  }
+
+  /* ---------- screen 3 : the letter ---------- */
+  #letter{ padding:0; overflow:hidden; }
+  .letter-head{
+    padding:50px 44px 24px;
+    text-align:center;
+    border-bottom:1px solid rgba(138,95,196,0.25);
+    background: linear-gradient(180deg, rgba(138,95,196,0.08), transparent);
+  }
+  .letter-title{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(30px, 6vw, 42px);
+    margin:0;
+    color:var(--accent-deep);
+    animation: titleReveal 1.4s ease forwards;
+  }
+  @keyframes titleReveal{
+    from{ opacity:0; letter-spacing:0.25em; }
+    to{ opacity:1; letter-spacing:0.01em; }
+  }
+  .letter-body{
+    padding:40px 44px 54px;
+    font-family:'Cormorant Garamond', serif;
+    font-size:19px;
+    line-height:1.85;
+    max-width:62ch;
+    margin:0 auto;
+  }
+  .letter-body p{
+    margin:0 0 22px;
+    opacity:0;
+    animation: fadeUp 0.9s ease forwards;
+  }
+  .letter-body p:nth-of-type(1){ animation-delay: 0.05s; }
+  .letter-body p:nth-of-type(2){ animation-delay: 0.12s; }
+  .letter-body p:nth-of-type(3){ animation-delay: 0.19s; }
+  .letter-body p:nth-of-type(4){ animation-delay: 0.26s; }
+  .letter-body p:nth-of-type(5){ animation-delay: 0.33s; }
+  .letter-body p:nth-of-type(n+6){ animation-delay: 0.4s; }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .places{
+    font-style:italic;
+    color:var(--accent-deep);
+  }
+  .stanza{ margin:0 0 6px; }
+  .stanza-block{ margin:0 0 22px; }
+  .ask-line{
+    font-size:23px;
+    text-align:center;
+    margin:34px 0;
+    color:var(--accent-deep);
+    animation: askGlow 3s ease-in-out infinite;
+  }
+  @keyframes askGlow{
+    0%,100%{ text-shadow: 0 0 0 transparent; }
+    50%{ text-shadow: 0 0 18px rgba(138,95,196,0.35); }
+  }
+  .rule{
+    width:56px;
+    height:1px;
+    background:var(--rule);
+    margin:34px auto;
+    border:none;
+  }
+  .closing{ margin-top:10px; }
+
+  .continue-wrap{
+    text-align:center;
+    padding:6px 0 4px;
+  }
+  .continue-wrap .note-small{
+    color:var(--fade);
+    margin-bottom:18px;
+    font-style:italic;
+    font-family:'Cormorant Garamond', serif;
+    font-size:16px;
+  }
+
+  /* ---------- screen 4 : feedback ---------- */
+  #feedback{
+    padding:52px 44px;
+    text-align:center;
+  }
+  .feedback-title{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:clamp(24px, 5vw, 30px);
+    color:var(--accent-deep);
+    margin:0 0 10px;
+  }
+  .feedback-sub{
+    font-size:14px;
+    color:var(--fade);
+    line-height:1.6;
+    max-width:400px;
+    margin:0 auto 34px;
+  }
+  .required-tag{ color:#b3477f; }
+  .stars{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .star-btn{
+    background:none;
+    border:none;
+    font-size:34px;
+    line-height:1;
+    color:var(--rule);
+    padding:2px 4px;
+    border-radius:8px;
+    transform-origin:center;
+  }
+  .star-btn.filled{
+    color:var(--accent-deep);
+    animation: starPop 0.35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes starPop{
+    0%{ transform:scale(0.7); }
+    60%{ transform:scale(1.3); }
+    100%{ transform:scale(1); }
+  }
+  .star-btn:hover{ color:var(--accent); transform:scale(1.15); }
+  .rating-label{
+    font-size:13px;
+    color:var(--fade);
+    margin-bottom:30px;
+    min-height:16px;
+    transition: color 0.3s ease;
+  }
+  .feedback-field{
+    text-align:left;
+    max-width:460px;
+    margin:0 auto 10px;
+  }
+  .feedback-field label{
+    display:block;
+    font-size:13px;
+    color:var(--fade);
+    margin-bottom:8px;
+  }
+  textarea{
+    width:100%;
+    min-height:110px;
+    resize:vertical;
+    border:1px solid var(--rule);
+    background:rgba(255,255,255,0.55);
+    padding:14px;
+    font-family:'Cormorant Garamond', serif;
+    font-size:17px;
+    color:var(--ink);
+    border-radius:10px;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow: 0 0 0 4px rgba(138,95,196,0.15);
+  }
+  .field-error{
+    font-size:12px;
+    color:#b3477f;
+    margin-top:6px;
+    min-height:16px;
+    text-align:left;
+  }
+  .submit-row{ margin-top:30px; }
+  .choice.disabled{
+    opacity:0.4;
+    cursor:not-allowed;
+    animation:none;
+    box-shadow:none;
+  }
+  .shake{
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0); }
+    25%{ transform:translateX(-6px); }
+    75%{ transform:translateX(6px); }
+  }
+
+  /* ---------- screen 5 : thank you ---------- */
+  #thankyou{
+    text-align:center;
+    padding:64px 30px;
+    position:relative;
+    overflow:hidden;
+  }
+  #thankyou p{
+    font-family:'Cormorant Garamond', serif;
+    font-size:22px;
+    line-height:1.7;
+    position:relative;
+    z-index:2;
+  }
+  .burst-heart{
+    position:absolute;
+    top:100%;
+    font-size:18px;
+    opacity:0;
+    z-index:1;
+    animation-name: burstUp;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+  }
+  @keyframes burstUp{
+    0%{ opacity:0; transform:translateY(0) scale(0.5); }
+    15%{ opacity:0.85; }
+    100%{ opacity:0; transform:translateY(-320px) scale(1.1); }
+  }
+
+  @media (max-width:480px){
+    .letter-head{padding:38px 22px 20px;}
+    .letter-body{padding:30px 22px 42px; font-size:18px;}
+    #gate{padding:44px 20px;}
+    #note{padding:54px 20px;}
+    #feedback{padding:40px 24px;}
+    .moon-glow{ width:80px; height:80px; }
+  }
+
+  ::selection{
+    background: var(--accent);
+    color: var(--moon);
+  }
+</style>
+</head>
+<body>
+
+<div id="sky">
+  <div class="moon-glow"></div>
+</div>
+
+<div class="stage">
+
+  <!-- SCREEN 1: THE GATE -->
+  <div class="screen active" id="screen-gate">
+    <div id="gate" class="card">
+      <div class="moon-emblem">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="moonGrad" cx="35%" cy="35%" r="70%">
+              <stop offset="0%" stop-color="#fffdf6"/>
+              <stop offset="60%" stop-color="#f0e0ff"/>
+              <stop offset="100%" stop-color="#c9a8ec"/>
+            </radialGradient>
+          </defs>
+          <circle cx="50" cy="50" r="42" fill="url(#moonGrad)"/>
+          <circle cx="35" cy="38" r="7" fill="#dcc2f0" opacity="0.6"/>
+          <circle cx="60" cy="60" r="10" fill="#dcc2f0" opacity="0.5"/>
+          <circle cx="65" cy="30" r="4" fill="#dcc2f0" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="mark">a letter, waiting under a purple sky</div>
+      <p class="gate-question">Do you have a few quiet minutes right now?</p>
+      <p class="gate-sub">There's something I've wanted to say to you properly. No rush, no pressure &mdash; only if this is a good moment.</p>
+      <div class="choice-row">
+        <button class="choice primary" onclick="goTo('screen-note')">Yes, I'm free to hear it</button>
+        <button class="choice" onclick="goTo('screen-decline')">Not right now</button>
+      </div>
+      <p class="honesty-note">Every word ahead is genuinely mine &mdash; I just used AI to help build the little site around it.</p>
+    </div>
+  </div>
+
+  <!-- DECLINE STATE -->
+  <div class="screen" id="screen-decline">
+    <div id="decline" class="card">
+      <p>That's okay. Truly.</p>
+      <p>Come back whenever you feel ready &mdash; this will still be here, and so will I.</p>
+      <div class="signature">no pressure, ever</div>
+      <button class="back-link" onclick="goTo('screen-gate')">back</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: SMALL NOTE -->
+  <div class="screen" id="screen-note">
+    <div id="note" class="card">
+      <p class="note-text">Before anything else &mdash; thank you for staying long enough to read this.<br><br>Whatever you feel after this, <em>just know it comes from an honest place.</em></p>
+
+      <div class="playlist">
+        <div class="playlist-label">
+          <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="18" cy="16" r="3" fill="currentColor"/></svg>
+          on repeat while writing this
+        </div>
+        <div class="track"><span class="note-ico">&#9834;</span> Winter Bear</div>
+        <div class="track"><span class="note-ico">&#9834;</span> Sweet Night</div>
+        <div class="track"><span class="note-ico">&#9834;</span> Slow Dancing</div>
+      </div>
+
+      <div class="choice-row">
+        <button class="choice primary" onclick="goTo('screen-letter')">Okay, I'm ready</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: THE LETTER -->
+  <div class="screen" id="screen-letter">
+    <div id="letter" class="card">
+      <div class="letter-head">
+        <p class="letter-title">Can We Be Us Again?</p>
+      </div>
+      <div class="letter-body">
+
+        <p>I've been thinking about everything we were, and I realise how much of it I took for granted.</p>
+
+        <p>The places we went&mdash;<span class="places">Charminar, Vizag, Shirdi, Chennai, Pondicherry, Kanyakumari, Varanasi, Agra, Delhi, Mathura, Araku, Kakinada, Annavaram, Tirupati, Srikalahasti, Yanam</span> and all those little places in between.</p>
+
+        <p>The buses, trains and flights. The premieres, first-day-first-shows and fan shows. The street food we had to try, the restaurants we had to find. The pickups and drop-offs. The early morning calls, midnight FaceTimes and those ridiculous pin-to-pin updates.</p>
+
+        <p>The arguments where sometimes one of us simply let the other win.</p>
+
+        <p>The plans that were supposed to be for one night but somehow became much longer.</p>
+
+        <p>Even the little things&mdash;the moods I somehow knew, the things you needed, the packs I would order without you having to ask.</p>
+
+        <p>None of it felt extraordinary while we were living it.</p>
+
+        <p>But now that there is silence between us, I realise those ordinary things were everything.</p>
+
+        <p>And somewhere along the way, I became the reason that something so beautiful between us got damaged.</p>
+
+        <p>I know my actions hurt you.</p>
+
+        <p>I know saying sorry cannot undo what I did, and I don't want to use these words to make excuses for myself. I just want you to know that I see it now. I understand that some things cannot simply be explained away or forgotten because I miss you.</p>
+
+        <p style="font-style:italic; color:var(--accent-deep);">I'm genuinely sorry.</p>
+
+        <div class="stanza-block">
+          <p class="stanza">Sorry for the moments when I should have understood you and didn't.</p>
+          <p class="stanza">Sorry for the times my actions made you feel something you never deserved to feel.</p>
+          <p class="stanza">Sorry for making the person who once felt safest with me have reasons to step away.</p>
+        </div>
+
+        <p>If I could go back, I wouldn't change our destinations, our trips, our fights, our silly negotiations or any of those countless little memories.</p>
+
+        <p>I'd change myself in the moments when I failed you.</p>
+
+        <p>I don't know what place I have in your life now.</p>
+
+        <p>Maybe I'm only a memory.</p>
+
+        <p>Maybe I'm someone you would rather leave behind.</p>
+
+        <p>But if there is even a tiny part of you that remembers the two of us the way I do, I want to ask you something&mdash;not expecting an answer, not forcing anything, just asking from the most honest place in me:</p>
+
+        <p class="ask-line">Can we find our way back to the old us?</p>
+
+        <p>Not by pretending nothing happened.</p>
+        <p>Not by forgetting.</p>
+        <p>But by becoming better versions of the two people who once found so much happiness in simply being together.</p>
+
+        <p>I don't expect everything to become normal overnight.</p>
+
+        <p>I just wish, someday, we could sit together again without the distance between us.</p>
+
+        <div class="stanza-block">
+          <p class="stanza">Take another long drive.</p>
+          <p class="stanza">Argue about something completely stupid.</p>
+          <p class="stanza">Share food.</p>
+          <p class="stanza">Watch a movie.</p>
+          <p class="stanza">Talk until midnight.</p>
+        </div>
+
+        <p>And maybe, somewhere in the middle of all that ordinary chaos, look at each other and realise&mdash;</p>
+
+        <p style="text-align:center; font-style:italic; font-size:21px; color:var(--accent-deep);">we found us again.</p>
+
+        <hr class="rule">
+
+        <p>If that day never comes, I'll still be grateful for every little piece of life we shared.</p>
+
+        <p>But if you ever feel there is a way back&hellip;</p>
+
+        <p class="closing">I would choose to walk it with you, slowly, properly, and differently this time.</p>
+
+        <div class="continue-wrap">
+          <hr class="rule">
+          <p class="note-small">before you go &mdash; one more thing</p>
+          <button class="choice primary" onclick="goTo('screen-feedback')">Continue</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: FEEDBACK (mandatory) -->
+  <div class="screen" id="screen-feedback">
+    <div id="feedback" class="card">
+      <p class="feedback-title">Before you close this</p>
+      <p class="feedback-sub">I'd really like to know how this landed for you. Both fields below are required &mdash; I want your honest reaction, not just a polite one.</p>
+
+      <div class="stars" id="starRow">
+        <button type="button" class="star-btn" data-value="1">&#9733;</button>
+        <button type="button" class="star-btn" data-value="2">&#9733;</button>
+        <button type="button" class="star-btn" data-value="3">&#9733;</button>
+        <button type="button" class="star-btn" data-value="4">&#9733;</button>
+        <button type="button" class="star-btn" data-value="5">&#9733;</button>
+      </div>
+      <div class="rating-label" id="ratingLabel">Tap a star to rate how this felt <span class="required-tag">*</span></div>
+
+      <div class="feedback-field">
+        <label for="feedbackText">Tell me honestly what you're feeling right now <span class="required-tag">*</span></label>
+        <textarea id="feedbackText" placeholder="Be as honest as you want&hellip;"></textarea>
+        <div class="field-error" id="textError"></div>
+      </div>
+
+      <div class="submit-row">
+        <button class="choice primary disabled" id="submitBtn" onclick="submitFeedback()">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: THANK YOU -->
+  <div class="screen" id="screen-thankyou">
+    <div id="thankyou" class="card">
+      <p id="thankyouMsg">Thank you for reading this, and for telling me the truth.</p>
+      <p class="signature" style="font-style:italic; color:var(--fade); font-size:14px; position:relative; z-index:2;">whatever happens next, I'm grateful you gave this a chance</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function goTo(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(id);
+    target.classList.add('active');
+    target.style.animation = 'none';
+    void target.offsetWidth;
+    target.style.animation = null;
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(id === 'screen-letter'){
+      playChime('piano');
+    }
+    if(id === 'screen-thankyou'){
+      setTimeout(spawnHearts, 300);
+      playChime('windchime');
+    }
+  }
+
+  // ---- soft generated ambient tones (no external audio, no third-party recordings) ----
+  let audioCtx = null;
+  function getCtx(){
+    if(!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AC();
+    }
+    if(audioCtx.state === 'suspended'){ audioCtx.resume(); }
+    return audioCtx;
+  }
+
+  function pluckNote(ctx, freq, startTime, duration, gain, type){
+    const osc = ctx.createOscillator();
+    const amp = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = type === 'windchime' ? 5200 : 3200;
+
+    osc.type = type === 'windchime' ? 'sine' : 'triangle';
+    osc.frequency.value = freq;
+
+    amp.gain.setValueAtTime(0, startTime);
+    amp.gain.linearRampToValueAtTime(gain, startTime + 0.02);
+    amp.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+    osc.connect(filter);
+    filter.connect(amp);
+    amp.connect(ctx.destination);
+
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.05);
+  }
+
+  function playChime(type){
+    try{
+      const ctx = getCtx();
+      const now = ctx.currentTime;
+
+      if(type === 'piano'){
+        // a single soft, warm piano-like note with a quiet fifth underneath
+        pluckNote(ctx, 392.00, now, 1.8, 0.11, 'piano');       // G4
+        pluckNote(ctx, 587.33, now + 0.05, 1.6, 0.06, 'piano'); // D5, softer, slightly delayed
+      } else if(type === 'windchime'){
+        // a gentle wind-chime style cascade, high and airy
+        const notes = [1046.5, 1318.5, 1567.98, 2093.0, 1760.0];
+        notes.forEach((f, i) => {
+          pluckNote(ctx, f, now + i * 0.14, 1.4, 0.045, 'windchime');
+        });
+      } else if(type === 'tap'){
+        // a tiny, soft touch-tone — picks a random note from a gentle pentatonic chord
+        const tapNotes = [523.25, 587.33, 659.25, 783.99, 880.0]; // C5 D5 E5 G5 A5
+        const freq = tapNotes[Math.floor(Math.random() * tapNotes.length)];
+        pluckNote(ctx, freq, now, 0.5, 0.05, 'windchime');
+      }
+    } catch(e){
+      // audio isn't critical to the experience — fail silently
+    }
+  }
+
+  // ---- soft tap-tone on any touch, everywhere except the letter page ----
+  function isLetterPageActive(){
+    const letterScreen = document.getElementById('screen-letter');
+    return letterScreen && letterScreen.classList.contains('active');
+  }
+
+  document.addEventListener('pointerdown', function(e){
+    if(isLetterPageActive()) return;
+    // avoid double-firing right on top of the dedicated piano/windchime moments
+    if(e.target.closest('.choice')) return;
+    playChime('tap');
+  });
+
+  // ---- ambient stars ----
+  const sky = document.getElementById('sky');
+  const starCount = 45;
+  for(let i=0;i<starCount;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.top = Math.random()*100 + 'vh';
+    s.style.animationDelay = (Math.random()*4) + 's';
+    s.style.animationDuration = (2.5 + Math.random()*3) + 's';
+    sky.appendChild(s);
+  }
+
+  // ---- falling petals ----
+  const petalCount = 16;
+  for(let i=0;i<petalCount;i++){
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.animationDuration = (9 + Math.random()*8) + 's';
+    p.style.animationDelay = (Math.random()*12) + 's';
+    p.style.opacity = 0.35 + Math.random()*0.35;
+    const scale = 0.7 + Math.random()*0.8;
+    p.style.transform = 'scale(' + scale + ')';
+    sky.appendChild(p);
+  }
+
+  // ---- star rating ----
+  let selectedRating = 0;
+  const starButtons = document.querySelectorAll('.star-btn');
+  const ratingLabel = document.getElementById('ratingLabel');
+  const ratingWords = {1:'It didn\'t land well', 2:'It was okay', 3:'It meant something', 4:'It moved me', 5:'It really moved me'};
+
+  starButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedRating = parseInt(btn.dataset.value, 10);
+      paintStars(selectedRating);
+      ratingLabel.style.color = 'var(--fade)';
+      ratingLabel.textContent = ratingWords[selectedRating];
+      checkFormValidity();
+    });
+    btn.addEventListener('mouseenter', () => paintStars(parseInt(btn.dataset.value, 10)));
+    btn.addEventListener('mouseleave', () => paintStars(selectedRating));
+  });
+
+  function paintStars(count){
+    starButtons.forEach(b => {
+      const val = parseInt(b.dataset.value, 10);
+      const shouldFill = val <= count;
+      if(shouldFill && !b.classList.contains('filled')){
+        b.classList.add('filled');
+      } else if(!shouldFill){
+        b.classList.remove('filled');
+      }
+    });
+  }
+
+  // ---- textarea ----
+  const feedbackText = document.getElementById('feedbackText');
+  const textError = document.getElementById('textError');
+  const submitBtn = document.getElementById('submitBtn');
+
+  feedbackText.addEventListener('input', checkFormValidity);
+
+  function checkFormValidity(){
+    const hasRating = selectedRating > 0;
+    const hasText = feedbackText.value.trim().length > 0;
+    if(hasRating && hasText){
+      submitBtn.classList.remove('disabled');
+    } else {
+      submitBtn.classList.add('disabled');
+    }
+  }
+
+  function submitFeedback(){
+    const hasRating = selectedRating > 0;
+    const hasText = feedbackText.value.trim().length > 0;
+
+    if(!hasRating){
+      ratingLabel.textContent = 'Please choose a rating before continuing';
+      ratingLabel.style.color = '#b3477f';
+      document.getElementById('starRow').classList.add('shake');
+      setTimeout(()=>document.getElementById('starRow').classList.remove('shake'), 400);
+    }
+    if(!hasText){
+      textError.textContent = 'Please share a few words \u2014 this field can\'t be skipped';
+      feedbackText.classList.add('shake');
+      setTimeout(()=>feedbackText.classList.remove('shake'), 400);
+    } else {
+      textError.textContent = '';
+    }
+
+    if(!hasRating || !hasText){
+      return;
+    }
+
+    const stars = '\u2605'.repeat(selectedRating) + '\u2606'.repeat(5 - selectedRating);
+    document.getElementById('thankyouMsg').innerHTML =
+      'Thank you for reading this, and for telling me the truth.<br><br>' +
+      '<span style="font-size:20px; letter-spacing:2px; color:var(--accent-deep);">' + stars + '</span><br><br>' +
+      '<span style="font-size:18px;">&ldquo;' + feedbackText.value.trim().replace(/</g,'&lt;') + '&rdquo;</span>';
+
+    goTo('screen-thankyou');
+  }
+
+  // ---- thank-you heart burst ----
+  function spawnHearts(){
+    const container = document.getElementById('thankyou');
+    const hearts = ['\u{1F49C}','\u2728','\u{1F31E}'];
+    for(let i=0;i<22;i++){
+      const h = document.createElement('span');
+      h.className = 'burst-heart';
+      h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+      h.style.left = (5 + Math.random()*90) + '%';
+      h.style.animationDuration = (2 + Math.random()*1.5) + 's';
+      h.style.animationDelay = (Math.random()*0.6) + 's';
+      container.appendChild(h);
+      setTimeout(()=>h.remove(), 4000);
+    }
+  }
+</script>
+
+</body>
+</html>
